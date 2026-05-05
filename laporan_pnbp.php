@@ -6,105 +6,113 @@ if (!isset($_SESSION['user_id'])) {
 }
 require_once 'config/koneksi.php';
 
-// Cek Kasta: Apakah yang login ini Admin?
+// Cek Kasta Admin
 $is_admin = in_array(strtolower($_SESSION['role']), ['admin', 'admin_utama']);
 
-// Fitur Pencarian berdasarkan Kode atau Keterangan
-$search = $_GET['cari'] ?? '';
-$sql = "SELECT * FROM laporan_pnbp WHERE kode LIKE :search OR keterangan LIKE :search ORDER BY tanggal DESC, id DESC";
-$stmt = $pdo->prepare($sql);
-$stmt->execute(['search' => "%$search%"]);
-$data_pnbp = $stmt->fetchAll();
+// Filter Tanggal Master (Udah nggak pakai pencarian KODE lagi)
+$mulai_tanggal  = $_GET['mulai_tanggal'] ?? date('Y-m-01'); 
+$sampai_tanggal = $_GET['sampai_tanggal'] ?? date('Y-m-t'); 
 
 include 'layouts/header.php';
 include 'layouts/navbar.php';
 ?>
 
-<div class="dashboard-header">
-    <h2>Laporan PNBP 💸</h2>
-    <p>Pantau target pagu dan realisasi Penerimaan Negara Bukan Pajak.</p>
+<div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
+    <div>
+        <h2>Daftar Laporan PNBP 💸</h2>
+        <p>Pantau rekapitulasi laporan Penerimaan Negara Bukan Pajak.</p>
+    </div>
+    
+    <?php if ($is_admin): ?>
+        <a href="tambah_laporan_pnbp.php" class="btn-shortcut" style="padding: 10px 20px; width: auto; font-size: 13px;">
+            + Buat Laporan Baru
+        </a>
+    <?php endif; ?>
 </div>
 
-<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px;">
-    
-    <form method="GET" action="" class="search-invisible">
-        <input type="text" name="cari" value="<?= htmlspecialchars($search) ?>" placeholder="Cari kode atau keterangan...">
-        <button type="submit" title="Cari">🔍</button>
+<div class="glass panel-utama">
+    <form method="GET" action="" class="filter-pill-bar">
+        <div class="filter-row-full" style="display: flex; align-items: center; gap: 15px;">
+            <div style="flex: 1;">
+                <label style="display:block; font-size:12px; margin-bottom:5px; opacity:0.7;">tanggal mulai</label>
+                <input type="date" name="mulai_tanggal" class="input-full-width" value="<?= $mulai_tanggal ?>" required>
+            </div>
+            
+            <div style="flex: 1;">
+                <label style="display:block; font-size:12px; margin-bottom:5px; opacity:0.7;">tanggal akhir</label>
+                <input type="date" name="sampai_tanggal" class="input-full-width" value="<?= $sampai_tanggal ?>" required>
+            </div>
+
+            <div style="margin-top: 22px;">
+                <button type="submit" class="btn-navy-pill">terapkan filter 🔍</button>
+            </div>
+        </div>
     </form>
 
-    <!-- Tombol Tambah HANYA UNTUK ADMIN -->
-    <?php if ($is_admin): ?>
-        <a href="tambah_pnbp.php" class="btn-shortcut" style="width: auto; padding: 12px 25px;">+ Tambah Realisasi PNBP</a>
-    <?php endif; ?>
+    <h3 style="margin-top: 35px; margin-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 18px;">📊 Rekapitulasi Laporan PNBP</span>
+    </h3>
 
-</div>
+    <div class="panel-tabel">
+        <table class="table-minimal">
+            <thead>
+                <tr>
+                    <th style="width: 5%; text-align: center;">No.</th>
+                    <th style="width: 15%;">Tgl Laporan</th>
+                    <th style="width: 25%;">Periode Laporan</th>
+                    <th style="width: 40%;">Keterangan</th>
+                    <th style="width: 15%; text-align: center;">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                // Baris yang error tadi UDAH HILANG, diganti ini:
+                $sql = "SELECT * FROM laporan_pnbp WHERE periode_mulai >= :mulai AND periode_sampai <= :sampai ORDER BY tanggal_laporan DESC";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute(['mulai' => $mulai_tanggal, 'sampai' => $sampai_tanggal]);
+                $data_laporan = $stmt->fetchAll();
 
-<div class="panel-tabel glass">
-    <table class="table-minimal">
-        <thead>
-            <tr>
-                <th style="width: 5%; text-align: center;">No.</th>
-                <th style="width: 20%;">Kode / Jenis PNBP</th>
-                <th style="width: 25%;">Pagu (Target)</th>
-                <th style="width: 25%;">Realisasi</th>
-                <th style="width: 15%;">Sisa / Selisih</th>
-                <th style="width: 10%; text-align: center;">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if(count($data_pnbp) > 0): ?>
-                <?php 
-                $no = 1;
-                foreach($data_pnbp as $row): 
-                    // Rumus sakti hitung sisa target otomatis
-                    $sisa = $row['pagu'] - $row['realisasi'];
+                if (count($data_laporan) == 0): 
                 ?>
-                <tr>
-                    <td style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);"><?= $no++ ?></td>
-                    
-                    <td style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                        <!-- Badge ungu elegan buat Kode -->
-                        <span style="padding: 6px 14px; border-radius: 50px; font-size: 11px; font-weight: 700; display: inline-block; background: rgba(167, 139, 250, 0.15); color: #c4b5fd; border: 1px solid rgba(167, 139, 250, 0.4);">
-                            🏷️ <?= htmlspecialchars($row['kode']) ?>
-                        </span>
-                        <div style="font-size: 11px; opacity: 0.7; margin-top: 5px;"><?= date('d M Y', strtotime($row['tanggal'])) ?></div>
-                    </td>
-                    
-                    <!-- Pagu pakai warna cyan standar -->
-                    <td style="border-bottom: 1px solid rgba(255,255,255,0.1); color: #64ffda; font-weight: bold;">
-                        Rp <?= number_format($row['pagu'], 0, ',', '.') ?>
-                    </td>
-                    
-                    <!-- Realisasi pakai warna orange -->
-                    <td style="border-bottom: 1px solid rgba(255,255,255,0.1); color: #ffb86c; font-weight: bold;">
-                        Rp <?= number_format($row['realisasi'], 0, ',', '.') ?>
-                    </td>
-
-                    <!-- Sisa pakai warna hijau cerah -->
-                    <td style="border-bottom: 1px solid rgba(255,255,255,0.1); color: #50fa7b; font-weight: bold;">
-                        Rp <?= number_format($sisa, 0, ',', '.') ?>
-                    </td>
-                    
-                    <td style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                        <?php if ($is_admin): ?>
-                            <a href="edit_pnbp.php?id=<?= $row['id'] ?>" style="color: #64ffda; text-decoration: none; font-size: 11px; font-weight: bold; margin-right: 10px;">Edit</a>
-                            <a href="hapus_pnbp.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin mau hapus data ini?')" style="color: #ff4c4c; text-decoration: none; font-size: 11px; font-weight: bold;">Hapus</a>
-                        <?php else: ?>
-                            <span style="font-size: 11px; color: rgba(255,255,255,0.4); font-style: italic;">Hanya Lihat</span>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="6" style="text-align: center; padding: 50px; opacity: 0.5;">
-                        <div style="font-size: 40px; margin-bottom: 10px;">💸</div>
-                        Belum ada data Pagu dan Realisasi PNBP yang dicatat...
-                    </td>
-                </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 50px; opacity: 0.5;">
+                            Belum ada laporan PNBP pada rentang tanggal ini...
+                        </td>
+                    </tr>
+                <?php 
+                else: 
+                    $no = 1;
+                    foreach ($data_laporan as $row):
+                ?>
+                    <tr>
+                        <td style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);"><?= $no++ ?></td>
+                        <td style="border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold;"><?= date('d M Y', strtotime($row['tanggal_laporan'])) ?></td>
+                        <td style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <span class="badge" style="background: rgba(34, 211, 238, 0.15); color: #67e8f9; border: 1px solid rgba(34, 211, 238, 0.4);">
+                                <?= date('d M Y', strtotime($row['periode_mulai'])) ?> s/d <?= date('d M Y', strtotime($row['periode_sampai'])) ?>
+                            </span>
+                        </td>
+                        <td style="border-bottom: 1px solid rgba(255,255,255,0.1); opacity: 0.9;">
+                            <?= htmlspecialchars($row['keterangan']) ?> 
+                        </td>
+                        <td style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <a href="detail_pnbp.php?id=<?= $row['id'] ?>" class="btn-navy-pill" style="padding: 6px 15px; font-size: 11px; margin-bottom: 8px; display: inline-block;">
+                                👁️ Buka Rincian
+                            </a>
+                            
+                            <?php if ($is_admin): ?>
+                                <br>
+                                <a href="hapus_laporan_pnbp.php?id=<?= $row['id'] ?>" onclick="return confirm('Hapus laporan ini beserta semua rincian di dalamnya?')" style="color: #ff4c4c; text-decoration: none; font-size: 11px; font-weight: bold;">Hapus Laporan</a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php 
+                    endforeach; 
+                endif; 
+                ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <?php include 'layouts/footer.php'; ?>
