@@ -9,25 +9,38 @@ if (!isset($_SESSION['user_id']) || (strtolower($_SESSION['role']) !== 'admin' &
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Tangkap data Waktu/Periode
     $tanggal_laporan = $_POST['tanggal_laporan'];
     $periode_mulai   = $_POST['periode_mulai'];
     $periode_sampai  = $_POST['periode_sampai'];
-    $keterangan      = trim($_POST['keterangan']);
+    
+    // Tangkap data INTI (PNBP)
+    $kode        = trim($_POST['kode']);
+    $pagu        = $_POST['pagu'];
+    $realisasi   = $_POST['realisasi'];
+    $keterangan  = trim($_POST['keterangan']);
 
-    // Validasi simpel: Pastikan tanggal mulai nggak lebih besar dari tanggal sampai
+    // Validasi 1: Tanggal mulai nggak boleh lebih dari tanggal akhir
     if (strtotime($periode_mulai) > strtotime($periode_sampai)) {
-        $error = "Tanggal periode mulai tidak boleh melebihi tanggal akhir periode!";
-    } else {
-        // Insert ke tabel Master
-        $sql = "INSERT INTO laporan_pnbp (tanggal_laporan, periode_mulai, periode_sampai, keterangan) VALUES (?, ?, ?, ?)";
+        $error = "Tanggal periode mulai tidak boleh melebihi tanggal akhir!";
+    } 
+    // Validasi 2: Realisasi nggak boleh lebih dari Pagu
+    elseif ($realisasi > $pagu) {
+        $error = "Waduh! Angka realisasi nggak boleh lebih besar dari Target Pagu bos.";
+    } 
+    else {
+        // Masukin SEMUANYA ke 1 database
+        $sql = "INSERT INTO laporan_pnbp 
+                (tanggal_laporan, periode_mulai, periode_sampai, kode, pagu, realisasi, keterangan) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
         
-        if ($stmt->execute([$tanggal_laporan, $periode_mulai, $periode_sampai, $keterangan])) {
-            // Sukses bikin map laporan, langsung balik ke halaman daftar
+        if ($stmt->execute([$tanggal_laporan, $periode_mulai, $periode_sampai, $kode, $pagu, $realisasi, $keterangan])) {
+            // Kalau sukses, lempar balik ke halaman daftar PNBP
             header("Location: laporan_pnbp.php");
             exit;
         } else {
-            $error = "Gagal membuat laporan PNBP. Silakan coba lagi!";
+            $error = "Gagal menyimpan laporan. Coba lagi!";
         }
     }
 }
@@ -38,8 +51,8 @@ include 'layouts/navbar.php';
 
 <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
     <div>
-        <h2>Buat Laporan PNBP Baru 📁</h2>
-        <p>Buat folder/periode laporan baru sebelum memasukkan rincian realisasi.</p>
+        <h2>Tambah Laporan PNBP</h2>
+        <p>Unggah data target pagu dan serapan Penerimaan Negara Bukan Pajak.</p>
     </div>
     <a href="laporan_pnbp.php" style="color: var(--text-white); text-decoration: none; opacity: 0.8;">← Kembali ke Daftar</a>
 </div>
@@ -53,12 +66,11 @@ include 'layouts/navbar.php';
     <?php endif; ?>
 
     <form action="" method="POST">
-        <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Informasi Periode Laporan</h3>
+        <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Periode Laporan</h3>
         
         <div class="form-grid">
             <div class="form-group form-full">
-                <label>Tanggal Pembuatan Laporan</label>
-                <!-- Default diisi tanggal hari ini -->
+                <label>Tanggal Pencatatan Laporan</label>
                 <input type="date" name="tanggal_laporan" value="<?= date('Y-m-d') ?>" required>
             </div>
 
@@ -72,15 +84,35 @@ include 'layouts/navbar.php';
                     <input type="date" name="periode_sampai" required>
                 </div>
             </div>
+        </div>
+
+        <h3 style="margin-top: 25px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Detail Penerimaan</h3>
+
+        <div class="form-grid">
+            <div class="form-group form-full">
+                <label>Kode / Jenis PNBP</label>
+                <input type="text" name="kode" placeholder="Contoh: 425131 (Jasa Keimigrasian)" required autocomplete="off">
+            </div>
+
+            <div class="form-group form-full" style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label>Target Pagu (Rp)</label>
+                    <input type="number" name="pagu" placeholder="Contoh: 500000000 (Tanpa titik)" required>
+                </div>
+                <div style="flex: 1;">
+                    <label>Realisasi (Rp)</label>
+                    <input type="number" name="realisasi" placeholder="Contoh: 150000000 (Tanpa titik)" required>
+                </div>
+            </div>
 
             <div class="form-group form-full">
-                <label>Keterangan / Nama Laporan</label>
-                <input type="text" name="keterangan" placeholder="Contoh: Laporan Realisasi PNBP Bulan Mei 2026..." required autocomplete="off">
+                <label>Keterangan / Deskripsi</label>
+                <input type="text" name="keterangan" placeholder="Contoh: Penerimaan Paspor Bulan Mei..." required autocomplete="off">
             </div>
         </div>
 
         <div style="text-align: right; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; margin-top: 20px;">
-            <button type="submit" class="btn-shortcut" style="width: 250px;">💾 Simpan & Buat Laporan</button>
+            <button type="submit" class="btn-shortcut" style="width: 200px;">Simpan Laporan</button>
         </div>
     </form>
 </div>
