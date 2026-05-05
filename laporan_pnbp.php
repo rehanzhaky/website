@@ -24,7 +24,7 @@ include 'layouts/navbar.php';
     </div>
     
     <?php if ($is_admin): ?>
-        <a href="tambah_laporan_pnbp.php" class="btn-shortcut" style="padding: 10px 20px; width: auto; font-size: 13px;">
+        <a href="tambah_laporan.php" class="btn-shortcut" style="padding: 10px 20px; width: auto; font-size: 13px;">
             + Buat Laporan Baru
         </a>
     <?php endif; ?>
