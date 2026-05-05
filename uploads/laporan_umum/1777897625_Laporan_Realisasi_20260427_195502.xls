@@ -1,0 +1,30 @@
+
+<table border="1" style="border-collapse: collapse; width: 100%;">
+    <thead>
+        <tr>
+            <th colspan="7" style="font-size: 16px; text-align: center; font-weight: bold; padding: 10px;">
+                REALISASI BELANJA PER JENIS BELANJA            </th>
+        </tr>
+        <tr>
+            <th colspan="7" style="text-align: center; padding-bottom: 10px;">
+                Periode: 01 Apr 2026 s/d 30 Apr 2026            </th>
+        </tr>
+        
+        <tr>
+            <th rowspan="2" style="background-color: #f2f2f2; text-align: center; vertical-align: middle;">No.</th>
+            <th rowspan="2" style="background-color: #f2f2f2; text-align: center; vertical-align: middle;">
+                (Kode) Jenis Belanja            </th>
+            <th rowspan="2" style="background-color: #f2f2f2; text-align: center; vertical-align: middle;">Keterangan</th>
+            <th colspan="3" style="background-color: #f2f2f2; text-align: center;">Jenis Belanja</th>
+            <th rowspan="2" style="background-color: #f2f2f2; text-align: center; vertical-align: middle;">Total</th>
+        </tr>
+        <tr>
+            <th style="background-color: #f2f2f2; text-align: center;">Pegawai</th>
+            <th style="background-color: #f2f2f2; text-align: center;">Barang</th>
+            <th style="background-color: #f2f2f2; text-align: center;">Modal</th>
+        </tr>
+    </thead>
+    
+    <tbody>
+            </tbody>
+</table>
