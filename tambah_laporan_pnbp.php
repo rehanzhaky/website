@@ -2,41 +2,35 @@
 session_start();
 require_once 'config/koneksi.php';
 
-// PROTEKSI: Cuma Admin & Admin Utama yang boleh masuk
 if (!isset($_SESSION['user_id']) || (strtolower($_SESSION['role']) !== 'admin' && strtolower($_SESSION['role']) !== 'admin_utama')) {
     header("Location: index.php");
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Tangkap data Waktu/Periode
     $tanggal_laporan = $_POST['tanggal_laporan'];
     $periode_mulai   = $_POST['periode_mulai'];
     $periode_sampai  = $_POST['periode_sampai'];
     
-    // Tangkap data INTI (PNBP)
     $kode        = trim($_POST['kode']);
     $pagu        = $_POST['pagu'];
     $realisasi   = $_POST['realisasi'];
     $keterangan  = trim($_POST['keterangan']);
 
-    // Validasi 1: Tanggal mulai nggak boleh lebih dari tanggal akhir
     if (strtotime($periode_mulai) > strtotime($periode_sampai)) {
         $error = "Tanggal periode mulai tidak boleh melebihi tanggal akhir!";
     } 
-    // Validasi 2: Realisasi nggak boleh lebih dari Pagu
+    
     elseif ($realisasi > $pagu) {
         $error = "Waduh! Angka realisasi nggak boleh lebih besar dari Target Pagu bos.";
     } 
     else {
-        // Masukin SEMUANYA ke 1 database
         $sql = "INSERT INTO laporan_pnbp 
                 (tanggal_laporan, periode_mulai, periode_sampai, kode, pagu, realisasi, keterangan) 
                 VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
         
         if ($stmt->execute([$tanggal_laporan, $periode_mulai, $periode_sampai, $kode, $pagu, $realisasi, $keterangan])) {
-            // Kalau sukses, lempar balik ke halaman daftar PNBP
             header("Location: laporan_pnbp.php");
             exit;
         } else {

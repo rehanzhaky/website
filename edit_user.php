@@ -2,60 +2,50 @@
 session_start();
 require_once 'config/koneksi.php';
 
-// Proteksi halaman: Harus Login & Role harus admin/admin_utama
 if (!isset($_SESSION['user_id']) || (strtolower($_SESSION['role']) !== 'admin' && strtolower($_SESSION['role']) !== 'admin_utama')) {
     header("Location: index.php");
     exit;
 }
 
-// 1. TANGKAP ID USER DARI URL
 $id_user = $_GET['id'] ?? null;
 if (!$id_user) {
     header("Location: kelola_pengguna.php");
     exit;
 }
 
-// 2. AMBIL DATA USER YANG MAU DIEDIT
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$id_user]);
 $user_edit = $stmt->fetch();
 
-// Kalau misal ID-nya ngawur dan gak ada di database
 if (!$user_edit) {
     header("Location: kelola_pengguna.php");
     exit;
 }
 
-// 3. PROSES KALAU TOMBOL SIMPAN DIKLIK
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nama_lengkap = trim($_POST['nama_lengkap']);
     $username     = trim($_POST['username']);
-    $password     = $_POST['password']; // Sengaja ga di-trim biar spasi tetep keitung kalau sengaja
+    $password     = $_POST['password'];
     $role         = $_POST['role'];
     $seksi        = $_POST['seksi'];
 
-    // Cek username bentrok (TAPI ngecualin ID dia sendiri)
     $cek = $pdo->prepare("SELECT id FROM users WHERE username = ? AND id != ?");
     $cek->execute([$username, $id_user]);
     
     if ($cek->rowCount() > 0) {
         $error = "Waduh, username <b>@$username</b> udah dipakai orang lain. Coba yang lain!";
     } else {
-        // Cek apakah password diisi atau dibiarkan kosong
         if (!empty($password)) {
-            // KALAU DIISI: Update semua termasuk password baru
             $password_hash = password_hash($password, PASSWORD_DEFAULT);
             $sql = "UPDATE users SET username=?, password=?, nama_lengkap=?, role=?, seksi=? WHERE id=?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$username, $password_hash, $nama_lengkap, $role, $seksi, $id_user]);
         } else {
-            // KALAU KOSONG: Update data lain aja, password lama tetap aman
             $sql = "UPDATE users SET username=?, nama_lengkap=?, role=?, seksi=? WHERE id=?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$username, $nama_lengkap, $role, $seksi, $id_user]);
         }
         
-        // Sukses? Balik ke tabel
         header("Location: kelola_pengguna.php");
         exit;
     }
@@ -88,7 +78,6 @@ include 'layouts/navbar.php';
         <div class="form-grid">
             <div class="form-group">
                 <label>Nama Pegawai (Lengkap)</label>
-                <!-- Menampilkan value lama ke dalam form -->
                 <input type="text" name="nama_lengkap" value="<?= htmlspecialchars($user_edit['nama_lengkap']) ?>" required autocomplete="off">
             </div>
             
@@ -98,16 +87,13 @@ include 'layouts/navbar.php';
             </div>
 
             <div class="form-group form-full">
-                <!-- Label dimodif ngasih tau kalau ga wajib diisi -->
                 <label>Kata Sandi Baru <span style="color: rgba(255,255,255,0.4); font-size: 10px; font-weight: normal;">(Kosongkan jika tidak ingin mengubah password)</span></label>
-                <!-- DIBIKIN GAK REQUIRED BIAR BISA DIKOSONGIN -->
                 <input type="password" name="password" placeholder="••••••••">
             </div>
 
             <div class="form-group">
                 <label>Status Akses (Role)</label>
                 <select name="role" required>
-                    <!-- Trik PHP buat nandain mana yang 'selected' alias aktif -->
                     <option value="user" <?= ($user_edit['role'] == 'user') ? 'selected' : '' ?>>User Biasa</option>
                     <option value="admin" <?= (in_array(strtolower($user_edit['role']), ['admin', 'admin_utama'])) ? 'selected' : '' ?>>Administrator</option>
                 </select>

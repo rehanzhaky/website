@@ -1,6 +1,5 @@
 <?php
 session_start();
-// Kalau di session nggak ada user_id (berarti belum login), tendang ke login.php!
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;

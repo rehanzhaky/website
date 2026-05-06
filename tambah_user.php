@@ -2,13 +2,11 @@
 session_start();
 require_once 'config/koneksi.php';
 
-// Proteksi halaman: Harus Login & Role harus admin/admin_utama
 if (!isset($_SESSION['user_id']) || (strtolower($_SESSION['role']) !== 'admin' && strtolower($_SESSION['role']) !== 'admin_utama')) {
     header("Location: index.php");
     exit;
 }
 
-// Kalau form disubmit
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nama_lengkap = trim($_POST['nama_lengkap']);
     $username     = trim($_POST['username']);

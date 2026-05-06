@@ -6,7 +6,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 require_once 'config/koneksi.php';
 
-// CEK KASTA & IDENTITAS USER
 $is_admin = in_array(strtolower($_SESSION['role']), ['admin', 'admin_utama']);
 $user_seksi = $_SESSION['seksi'] ?? '';
 
@@ -23,8 +22,6 @@ include 'layouts/navbar.php';
 $daftar_seksi = ['Tata Usaha', 'TIKKIM', 'Intaltuskim', 'Inteldakim', 'Lantaskim'];
 
 foreach ($daftar_seksi as $seksi):
-    // LOGIKA FILTER AKSE EKSKLUSIF
-    // Jika BUKAN admin, DAN nama seksi di looping ini NGGAK SAMA dengan seksi si user, lewati!
     if (!$is_admin && strtolower($seksi) !== strtolower($user_seksi)) {
         continue; 
     }

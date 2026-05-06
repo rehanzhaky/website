@@ -2,38 +2,32 @@
 session_start();
 require_once 'config/koneksi.php';
 
-// PROTEKSI: Cuma Admin & Admin Utama yang boleh masuk
 if (!isset($_SESSION['user_id']) || (strtolower($_SESSION['role']) !== 'admin' && strtolower($_SESSION['role']) !== 'admin_utama')) {
     header("Location: index.php");
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Tangkap data kategori & filter
     $tipe_laporan    = $_POST['tipe_laporan'];
     $tanggal_laporan = $_POST['tanggal_laporan'];
     $periode_mulai   = $_POST['periode_mulai'];
     $periode_sampai  = $_POST['periode_sampai'];
     $seksi           = $_POST['seksi'];
     
-    // Tangkap data INTI (Duit & Tahun)
     $tahun       = $_POST['tahun'];
     $pagu        = $_POST['pagu'];
     $realisasi   = $_POST['realisasi'];
     $keterangan  = trim($_POST['keterangan']);
 
-    // Validasi dasar: Realisasi nggak boleh lebih dari Pagu
     if ($realisasi > $pagu) {
         $error = "Waduh! Angka realisasi nggak boleh lebih besar dari Pagu Anggaran bos.";
     } else {
-        // Masukin SEMUANYA ke database
         $sql = "INSERT INTO laporan_realisasi 
                 (tipe_laporan, tanggal_laporan, periode_mulai, periode_sampai, seksi, tahun, pagu, realisasi, keterangan) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
         
         if ($stmt->execute([$tipe_laporan, $tanggal_laporan, $periode_mulai, $periode_sampai, $seksi, $tahun, $pagu, $realisasi, $keterangan])) {
-            // Kalau sukses, lempar balik ke halaman tabel di TAB yang sesuai
             header("Location: realisasi_anggaran.php?tab=" . $tipe_laporan);
             exit;
         } else {

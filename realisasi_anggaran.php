@@ -6,7 +6,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 require_once 'config/koneksi.php';
 
-// CEK KASTA: Apakah dia Admin/Admin Utama?
 $is_admin = in_array(strtolower($_SESSION['role']), ['admin', 'admin_utama']);
 
 $mulai_tanggal  = $_GET['mulai_tanggal'] ?? date('Y-m-01'); 
@@ -23,7 +22,6 @@ include 'layouts/navbar.php';
         <p>Pantau serapan anggaran berdasarkan jenis belanja atau sumber dana.</p>
     </div>
     
-    <!-- TOMBOL TAMBAH CUMA MUNCUL BUAT ADMIN -->
     <?php if ($is_admin): ?>
         <a href="tambah_realisasi.php" class="btn-shortcut" style="padding: 10px 20px; width: auto; font-size: 13px;">
             + Tambah Laporan
@@ -32,13 +30,9 @@ include 'layouts/navbar.php';
 </div>
 
 <div class="badge-btn-group" style="margin-bottom: 20px;">
-    <a href="?tab=jenis_belanja&mulai_tanggal=<?= $mulai_tanggal ?>&sampai_tanggal=<?= $sampai_tanggal ?>" 
-       class="badge-btn <?= $tab_aktif == 'jenis_belanja' ? 'badge-solid-primary' : 'badge-outline-primary' ?>">
-       📦 Per Jenis Belanja
+    <a href="?tab=jenis_belanja&mulai_tanggal=<?= $mulai_tanggal ?>&sampai_tanggal=<?= $sampai_tanggal ?>" class="badge-btn <?= $tab_aktif == 'jenis_belanja' ? 'badge-solid-primary' : 'badge-outline-primary' ?>">📦 Per Jenis Belanja
     </a>
-    <a href="?tab=sumber_dana&mulai_tanggal=<?= $mulai_tanggal ?>&sampai_tanggal=<?= $sampai_tanggal ?>" 
-       class="badge-btn <?= $tab_aktif == 'sumber_dana' ? 'badge-solid-info' : 'badge-outline-info' ?>">
-       🏦 Per Sumber Dana
+    <a href="?tab=sumber_dana&mulai_tanggal=<?= $mulai_tanggal ?>&sampai_tanggal=<?= $sampai_tanggal ?>"  class="badge-btn <?= $tab_aktif == 'sumber_dana' ? 'badge-solid-info' : 'badge-outline-info' ?>">🏦 Per Sumber Dana
     </a>
 </div>
 
@@ -166,12 +160,10 @@ include 'layouts/navbar.php';
                         </td>
                         
                         <td style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                            <!-- Tombol Detail (Semua bisa lihat) -->
                             <a href="detail_realisasi.php?id=<?= $row['id'] ?>" class="btn-navy-pill" style="padding: 6px 15px; font-size: 11px; margin: 0; display: inline-block; margin-bottom: 8px;">
                                 👁️ Detail
                             </a>
                             
-                            <!-- TOMBOL EDIT & HAPUS (CUMA ADMIN YANG BISA LIHAT) -->
                             <?php if ($is_admin): ?>
                                 <br>
                                 <a href="edit_realisasi.php?id=<?= $row['id'] ?>" style="color: #64ffda; text-decoration: none; font-size: 11px; font-weight: bold; margin-right: 10px;">Edit</a>

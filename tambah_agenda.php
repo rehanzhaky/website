@@ -12,15 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tanggal       = $_POST['tanggal'];
     $keterangan    = trim($_POST['keterangan']);
     
-    // Urusan Upload Foto Dokumentasi (Opsional)
     $nama_file = "";
     if (isset($_FILES['dokumentasi']) && $_FILES['dokumentasi']['error'] != UPLOAD_ERR_NO_FILE) {
         $file_tmp = $_FILES['dokumentasi']['tmp_name'];
-        // Bikin nama file unik biar ga saling timpa
         $nama_file = time() . "_" . $_FILES['dokumentasi']['name'];
         $folder_tujuan = "uploads/agenda/";
         
-        // Cek kalau foldernya belum ada, dibikin otomatis
         if (!is_dir($folder_tujuan)) {
             mkdir($folder_tujuan, 0777, true);
         }
@@ -59,7 +56,6 @@ include 'layouts/navbar.php';
         </div>
     <?php endif; ?>
 
-    <!-- PENTING: enctype="multipart/form-data" wajib kalau ada upload file -->
     <form action="" method="POST" enctype="multipart/form-data">
         
         <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Detail Kegiatan</h3>
@@ -87,7 +83,6 @@ include 'layouts/navbar.php';
 
             <div class="form-group form-full">
                 <label>Foto Dokumentasi <span style="color: rgba(255,255,255,0.4); font-size: 10px; font-weight: normal;">(Opsional, format JPG/PNG)</span></label>
-                <!-- Pakai style sederhana dulu, kalau mau pakai JS yang ribet kayak di inventaris nanti bisa disesuaikan -->
                 <input type="file" name="dokumentasi" accept="image/png, image/jpeg, image/jpg" style="padding: 10px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.3); border-radius: 8px; width: 100%; color: white;">
             </div>
         </div>

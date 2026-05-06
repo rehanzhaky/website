@@ -6,7 +6,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 require_once 'config/koneksi.php';
 
-// Cek Kasta: Apakah yang login ini Admin?
 $is_admin = in_array(strtolower($_SESSION['role']), ['admin', 'admin_utama']);
 
 $search = $_GET['cari'] ?? '';
@@ -46,7 +45,6 @@ include 'layouts/navbar.php';
                 <th>Status</th>
                 <th>Aksi Dokumen</th>
                 
-                <!-- Kolom khusus persetujuan admin -->
                 <?php if ($is_admin): ?>
                     <th style="text-align: center;">Persetujuan</th>
                 <?php endif; ?>
@@ -63,7 +61,6 @@ include 'layouts/navbar.php';
                     <td><?= htmlspecialchars($row['seksi']) ?></td>
                     <td><?= date('d M Y', strtotime($row['tanggal'])) ?></td>
                     
-                    <!-- BAGIAN WARNA STATUS YANG UDAH SINKRON SAMA DATABASE -->
                     <td>
                         <?php 
                         if ($status_db == 'approve') {
@@ -85,7 +82,6 @@ include 'layouts/navbar.php';
                         </span>
                     </td>
                     
-                    <!-- BAGIAN TOMBOL CETAK PDF YANG LEBIH PINTAR -->
                     <td>
                         <?php if ($status_db == 'pending'): ?>
                             <a href="javascript:void(0);" onclick="alert('Sabar bos! Suratnya masih nunggu antrean buat di-ACC.');" style="color: #999; text-decoration: none; cursor: not-allowed; font-weight: bold; opacity: 0.5;">
@@ -102,7 +98,6 @@ include 'layouts/navbar.php';
                         <?php endif; ?>
                     </td>
 
-                    <!-- TOMBOL APPROVE/REJECT KHUSUS ADMIN -->
                     <?php if ($is_admin): ?>
                         <td style="text-align: center;">
                             <?php if ($status_db == 'pending'): ?>

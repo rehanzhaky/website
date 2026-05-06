@@ -6,7 +6,6 @@ if (!$id_laporan) {
     exit("ID Laporan tidak ditemukan!");
 }
 
-// Tarik Data Master
 $stmt = $pdo->prepare("SELECT * FROM laporan_realisasi WHERE id = ?");
 $stmt->execute([$id_laporan]);
 $laporan = $stmt->fetch();
@@ -15,7 +14,6 @@ if (!$laporan) {
     exit("Data laporan tidak ada!");
 }
 
-// Tarik Data Detail
 $stmt_detail = $pdo->prepare("SELECT * FROM laporan_realisasi_detail WHERE id_laporan = ?");
 $stmt_detail->execute([$id_laporan]);
 $details = $stmt_detail->fetchAll();
@@ -28,7 +26,6 @@ $details = $stmt_detail->fetchAll();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak PDF - Realisasi Anggaran</title>
     <style>
-        /* CSS Khusus Kertas Polos */
         body {
             font-family: 'Times New Roman', Times, serif; /* Font resmi laporan */
             color: #000;
@@ -50,7 +47,7 @@ $details = $stmt_detail->fetchAll();
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
-            font-size: 12px; /* Ukuran font tabel dikecilin dikit biar muat */
+            font-size: 12px; 
         }
         th, td {
             border: 1px solid #000;
@@ -65,7 +62,6 @@ $details = $stmt_detail->fetchAll();
         .text-center { text-align: center; }
         .bold { font-weight: bold; }
         
-        /* Hilangkan margin kertas bawaan browser saat diprint */
         @page { margin: 15mm; }
     </style>
 </head>

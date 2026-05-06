@@ -14,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $diketahui_oleh = $_POST['diketahui_oleh'];
     $keperluan = $_POST['keperluan'];
 
-    // Nomor Surat Otomatis
     $bulan_romawi = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
     $bulan_ini = $bulan_romawi[date('n')];
     $tahun_ini = date('Y');
@@ -22,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $urutan = $stmt_cek->fetchColumn() + 1;
     $nomor_surat = sprintf("%03d", $urutan) . "/SITAU/" . $bulan_ini . "/" . $tahun_ini;
 
-    // Upload File
     $lampiran_name = "";
     if (isset($_FILES['lampiran']) && $_FILES['lampiran']['error'] == 0) {
         $target_dir = "uploads/";
@@ -34,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         $pdo->beginTransaction();
 
-        // 1. Insert ke Tabel Master
         $sql_master = "INSERT INTO pengajuan_inventaris 
                        (nomor_surat, nama_surat, seksi, nama_pengaju, diketahui_oleh, keperluan, lampiran, tanggal, status) 
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
@@ -43,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         $id_pengajuan = $pdo->lastInsertId();
 
-        // 2. Insert ke Tabel Detail (PASTIKAN NAMA TABEL SESUAI GAMBAR KAMU)
         if (isset($_POST['nama_barang']) && is_array($_POST['nama_barang'])) {
             // Sesuai gambar: pengajuan_inventaris_detail
             $sql_detail = "INSERT INTO pengajuan_inventaris_detail (id_pengajuan, nama_barang, jumlah, satuan, keterangan) VALUES (?, ?, ?, ?, ?)";
@@ -63,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         $pdo->commit();
-        // Pakai redirect meta biar lebih "galak" kalau JS-nya diblokir
         echo "<script>alert('Berhasil!'); window.location.href='daftar_pengajuan.php';</script>";
         exit;
 

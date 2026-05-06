@@ -6,10 +6,8 @@ if (!isset($_SESSION['user_id'])) {
 }
 require_once 'config/koneksi.php';
 
-// Cek Kasta Admin
 $is_admin = in_array(strtolower($_SESSION['role']), ['admin', 'admin_utama']);
 
-// Filter Tanggal Master (Udah nggak pakai pencarian KODE lagi)
 $mulai_tanggal  = $_GET['mulai_tanggal'] ?? date('Y-m-01'); 
 $sampai_tanggal = $_GET['sampai_tanggal'] ?? date('Y-m-t'); 
 
@@ -66,7 +64,6 @@ include 'layouts/navbar.php';
             </thead>
             <tbody>
                 <?php
-                // Baris yang error tadi UDAH HILANG, diganti ini:
                 $sql = "SELECT * FROM laporan_pnbp WHERE periode_mulai >= :mulai AND periode_sampai <= :sampai ORDER BY tanggal_laporan DESC";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute(['mulai' => $mulai_tanggal, 'sampai' => $sampai_tanggal]);

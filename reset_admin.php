@@ -1,14 +1,11 @@
 <?php
 require_once 'config/koneksi.php';
 
-// Kita pakai username 'admin'
 $username = 'admin';
 $password_mentah = 'admin123';
 
-// Kita enkripsi passwordnya pakai standar keamanan PHP (Bcrypt)
 $password_hash = password_hash($password_mentah, PASSWORD_DEFAULT);
 
-// Timpa password yang lama di database pakai password yang udah dienkripsi
 $sql = "UPDATE users SET password = ? WHERE username = ?";
 $stmt = $pdo->prepare($sql);
 

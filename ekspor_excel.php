@@ -6,7 +6,6 @@ if (!$id_laporan) {
     exit("ID Laporan tidak ditemukan!");
 }
 
-// Tarik Data Master
 $stmt = $pdo->prepare("SELECT * FROM laporan_realisasi WHERE id = ?");
 $stmt->execute([$id_laporan]);
 $laporan = $stmt->fetch();
@@ -15,12 +14,10 @@ if (!$laporan) {
     exit("Data laporan tidak ada!");
 }
 
-// Tarik Data Detail
 $stmt_detail = $pdo->prepare("SELECT * FROM laporan_realisasi_detail WHERE id_laporan = ?");
 $stmt_detail->execute([$id_laporan]);
 $details = $stmt_detail->fetchAll();
 
-// --- MANTRA SAKTI EKSPOR EXCEL ---
 $nama_file = "Laporan_Realisasi_" . date('Ymd_His') . ".xls";
 header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=\"$nama_file\"");

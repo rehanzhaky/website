@@ -2,13 +2,11 @@
 session_start();
 require_once 'config/koneksi.php';
 
-// Proteksi halaman: Harus Login & Role harus admin/admin_utama
 if (!isset($_SESSION['user_id']) || (strtolower($_SESSION['role']) !== 'admin' && strtolower($_SESSION['role']) !== 'admin_utama')) {
     header("Location: index.php");
     exit;
 }
 
-// Fitur Pencarian Data Pengguna
 $search = $_GET['cari'] ?? '';
 $sql = "SELECT id, username, nama_lengkap, role, seksi FROM users WHERE nama_lengkap LIKE :search OR username LIKE :search ORDER BY id DESC";
 $stmt = $pdo->prepare($sql);
@@ -25,8 +23,6 @@ include 'layouts/navbar.php';
 </div>
 
 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px;">
-    
-    <!-- Form Search yang udah berfungsi -->
     <form method="GET" action="" class="search-invisible">
         <input type="text" name="cari" value="<?= htmlspecialchars($search) ?>" placeholder="Cari nama atau username...">
         <button type="submit" title="Cari">🔍</button>
@@ -59,7 +55,6 @@ include 'layouts/navbar.php';
                     </td>
                     <td><?= htmlspecialchars($row['seksi']) ?: 'Belum Diatur' ?></td>
                     <td>
-                        <!-- Pake base class badge dari kamu, ditambah inline style dikit biar konsisten warnanya -->
                         <?php if(in_array(strtolower($row['role']), ['admin', 'admin_utama'])): ?>
                             <span class="badge badge-admin" style="background: rgba(100, 255, 218, 0.1); color: #64ffda; border: 1px solid rgba(100, 255, 218, 0.2);">
                                 ADMINISTRATOR

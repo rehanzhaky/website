@@ -6,7 +6,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 require_once 'config/koneksi.php';
 
-// Fitur Filter / Pencarian
 $search = $_GET['cari'] ?? '';
 $sql = "SELECT * FROM agenda_kegiatan WHERE nama_kegiatan LIKE :search OR lokasi LIKE :search ORDER BY tanggal DESC";
 $stmt = $pdo->prepare($sql);

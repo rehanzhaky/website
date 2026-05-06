@@ -1,12 +1,10 @@
-/* assets/css/style.css */
-
 :root {
     --navy-dark: #0a192f;
     --navy-light: #112240;
     --glass-white: rgba(255, 255, 255, 0.12);
     --glass-border: rgba(255, 255, 255, 0.2);
     --text-white: #e6f1ff;
-    --accent-blue: #64ffda; /* Warna aksen tambahan biar makin 'IT' */
+    --accent-blue: #64ffda; 
 }
 
 * {
@@ -29,7 +27,7 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
-/* Glassmorphism Utility */
+
 .glass {
     background: var(--glass-white);
     backdrop-filter: blur(12px);
@@ -38,24 +36,22 @@ body {
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
-/* --- LOGIN CONTAINER --- */
 .login-container {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    z-index: 1; /* Pastikan konten login ada di paling depan */
+    z-index: 1; 
 }
 
-/* --- BACKGROUND SLIDESHOW ANIMATION --- */
 .bg-slideshow {
     position: fixed;
     width: 100%;
     height: 100vh;
     top: 0;
     left: 0;
-    z-index: -2; /* Di paling belakang */
+    z-index: -2; 
     list-style: none;
     margin: 0;
     padding: 0;
@@ -71,35 +67,31 @@ body {
     background-position: center center;
     background-repeat: no-repeat;
     opacity: 0;
-    /* Animasi jalan 18 detik total buat 3 gambar */
     animation: imageAnimation 18s linear infinite 0s;
 }
 
-/* Ganti path URL ini dengan foto-foto kantor/imigrasi yang kamu punya */
 .bg-slideshow li:nth-child(1) { 
     background-image: url('../image/tjp1.jpg'); 
 }
 .bg-slideshow li:nth-child(2) { 
     background-image: url('../image/tjp2.jpg'); 
-    animation-delay: 6s; /* Gambar 2 muncul setelah 6 detik */
+    animation-delay: 6s; 
 }
 .bg-slideshow li:nth-child(3) { 
     background-image: url('../image/tjp3.jpeg'); 
-    animation-delay: 12s; /* Gambar 3 muncul setelah 12 detik */
+    animation-delay: 12s; 
 }
 
-/* Lapisan Kaca Gelap biar form login tetap terbaca jelas */
 .bg-overlay {
     position: fixed;
     width: 100%;
     height: 100vh;
     top: 0;
     left: 0;
-    background: rgba(10, 25, 47, 0.75); /* Warna Navy Transparan */
+    background: rgba(10, 25, 47, 0.75); 
     z-index: -1;
 }
 
-/* Keyframes untuk efek fade in & fade out yang smooth */
 @keyframes imageAnimation {
     0% { opacity: 0; animation-timing-function: ease-in; }
     8% { opacity: 1; animation-timing-function: ease-out; }
@@ -125,24 +117,22 @@ body {
     font-size: 36px;
     font-weight: 800;
     color: #ffffff;
-    letter-spacing: 5px; /* Spasi huruf dilebarin dikit biar majestic */
+    letter-spacing: 5px;
     margin-bottom: 5px;
     text-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
 }
 
-/* --- HEADER LOGIN (LOGO & TEKS) --- */
 .login-header-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px; /* Jarak antara logo dan tulisan SITAU */
+    gap: 15px; 
     margin-bottom: 5px;
 }
 
 .login-logo-img {
-    width: 75px; /* Atur gede kecilnya logo di sini */
-    height: 55px;;
-    /* Opsional: Kasih efek glow dikit di logonya biar nyatu sama tema */
+    width: 75px; 
+    height: 55px;
     filter: drop-shadow(0 4px 10px rgba(255, 255, 255, 0.15));
 }
 
@@ -191,7 +181,7 @@ body {
 }
 
 .input-login:focus {
-    border-color: rgba(255, 255, 255, 0.5); /* Border jadi putih pas diklik */
+    border-color: rgba(255, 255, 255, 0.5); 
     background: rgba(255, 255, 255, 0.08);
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
 }
@@ -199,8 +189,8 @@ body {
 .btn-login {
     width: 100%;
     padding: 16px;
-    background: #ffffff; /* Tombol putih solid */
-    color: #0a192f; /* Teks navy */
+    background: #ffffff; 
+    color: #0a192f; 
     border: none;
     border-radius: 16px;
     font-weight: 800;
@@ -214,7 +204,7 @@ body {
 }
 
 .btn-login:hover {
-    background: rgba(255, 255, 255, 0.8); /* Agak redup pas di-hover */
+    background: rgba(255, 255, 255, 0.8); 
     transform: translateY(-2px);
     box-shadow: 0 15px 25px rgba(255, 255, 255, 0.2);
 }
@@ -459,7 +449,6 @@ body {
     color: var(--accent-blue);
 }
 
-/* --- FORM STYLES --- */
 .form-grid { 
     display: grid; 
     grid-template-columns: 1fr 1fr; 
@@ -525,7 +514,6 @@ body {
     color: var(--accent-blue); 
 }
 
-/* --- INVISIBLE BOX FORMS --- */
 input, textarea, select {
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -560,7 +548,6 @@ input:focus, textarea:focus, select:focus {
     background: rgba(255, 255, 255, 0.05); 
 }
 
-/* --- SEMI-TRANSPARENT INPUTS --- */
 input, textarea, select {
     background: rgba(255, 255, 255, 0.1); 
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -608,30 +595,28 @@ input:focus, textarea:focus, select:focus {
     white-space: nowrap;
 }
 
-/* --- FILE UPLOAD INFO --- */
 .file-upload-container {
     display: flex;
     align-items: center;
-    justify-content: flex-end; /* INI MAGIC-NYA: Dorong semua elemen ke mentok kanan */
+    justify-content: flex-end; 
     gap: 12px;
-    flex: 1; /* Biar dia ngisi seluruh sisa ruang yang ada di sebelah dropdown */
+    flex: 1; 
 }
 
 .file-info {
-    display: none; /* Disembunyikan dulu kalau belum ada file */
+    display: none; 
     align-items: center;
     gap: 10px;
-    background: rgba(0, 0, 0, 0.2); /* Background gelap dikit biar kontras */
+    background: rgba(0, 0, 0, 0.2); 
     padding: 8px 12px;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 13px;
-    animation: fadeIn 0.3s ease; /* Animasi muncul mulus */
+    animation: fadeIn 0.3s ease; 
 }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Teks nama file (dipotong pakai ... kalau kepanjangan) */
 .file-name {
     max-width: 150px;
     white-space: nowrap;
@@ -641,7 +626,6 @@ input:focus, textarea:focus, select:focus {
     font-weight: 600;
 }
 
-/* Tombol silang merah */
 .btn-discard {
     background: rgba(255, 76, 76, 0.2);
     border: none;
@@ -663,7 +647,6 @@ input:focus, textarea:focus, select:focus {
     transform: scale(1.1);
 }
 
-/* --- TAB NAVIGATION --- */
 .tab-container {
     display: flex;
     gap: 10px;
@@ -688,14 +671,12 @@ input:focus, textarea:focus, select:focus {
     background: rgba(255, 255, 255, 0.05);
 }
 
-/* Tab yang lagi aktif */
 .tab-btn.active {
     color: var(--accent-blue);
     background: rgba(79, 172, 254, 0.1);
     border: 1px solid rgba(79, 172, 254, 0.3);
 }
 
-/* --- FILTER BAR --- */
 .filter-bar {
     display: flex;
     align-items: flex-end;
@@ -719,11 +700,10 @@ input:focus, textarea:focus, select:focus {
 }
 
 .filter-group input {
-    width: auto; /* Timpa width 100% dari form sebelumnya */
+    width: auto; 
     padding: 8px 15px;
 }
 
-/* --- PILL BADGE BUTTONS (Sesuai Referensi Gambar) --- */
 .badge-btn-group {
     display: flex;
     gap: 12px;
@@ -733,7 +713,7 @@ input:focus, textarea:focus, select:focus {
 
 .badge-btn {
     padding: 6px 18px;
-    border-radius: 50px; /* Bentuk Kapsul/Pill */
+    border-radius: 50px; 
     font-size: 13px;
     font-weight: 600;
     text-decoration: none;
@@ -744,7 +724,6 @@ input:focus, textarea:focus, select:focus {
     cursor: pointer;
 }
 
-/* 1. Warna Primary (Mirip tombol biru/ungu di gambar) */
 .badge-outline-primary {
     background: transparent;
     border: 1.5px solid #6366f1;
@@ -760,7 +739,6 @@ input:focus, textarea:focus, select:focus {
     box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
 }
 
-/* 2. Warna Info (Mirip tombol cyan di gambar) */
 .badge-outline-info {
     background: transparent;
     border: 1.5px solid #06b6d4;
@@ -776,10 +754,9 @@ input:focus, textarea:focus, select:focus {
     box-shadow: 0 4px 10px rgba(6, 182, 212, 0.3);
 }
 
-/* --- TOMBOL FILTER NAVY PILL (Sesuai Arahan Mandor) --- */
 .btn-navy-pill {
-    background-color: #112240; /* Navy Light */
-    color: #ffffff;            /* Accent Blue */
+    background-color: #112240;
+    color: #ffffff; 
     border: 1px solid #382c6f;
     padding: 10px 30px;
     border-radius: 50px;
@@ -796,9 +773,9 @@ input:focus, textarea:focus, select:focus {
 }
 
 .btn-navy-pill:hover {
-    background-color: #33517e; /* Background jadi terang */
-    color: #ffffff;            /* Teks jadi Navy Gelap */
-    box-shadow: 0 0 20px rgba(113, 100, 255, 0.4); /* Efek glow */
+    background-color: #33517e; 
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(113, 100, 255, 0.4); 
     transform: translateY(-3px);
 }
 
@@ -806,7 +783,6 @@ input:focus, textarea:focus, select:focus {
     transform: translateY(1px);
 }
 
-/* --- CUSTOM ACCORDION GLASSMORPHISM (Laporan Umum) --- */
 .accordion-item {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -857,7 +833,6 @@ input:focus, textarea:focus, select:focus {
     background: rgba(0, 0, 0, 0.2);
 }
 
-/* --- UPDATE: Tumpuk ke bawah (Column) --- */
 .accordion-content {
     padding: 20px 25px;
     display: flex;
@@ -866,7 +841,6 @@ input:focus, textarea:focus, select:focus {
     border-top: 1px dashed rgba(255, 255, 255, 0.1);
 }
 
-/* --- STYLE UNTUK TOMBOL CARD PANJANG --- */
 .action-card {
     display: block;
     padding: 15px 20px;
@@ -882,7 +856,6 @@ input:focus, textarea:focus, select:focus {
     transform: translateY(-2px);
 }
 
-/* Warna khusus Card Lihat (Cyan/Navy) */
 .action-card.view:hover {
     border-color: var(--accent-blue, #64ffda);
     box-shadow: 0 4px 15px rgba(100, 255, 218, 0.1);
@@ -891,7 +864,6 @@ input:focus, textarea:focus, select:focus {
     color: var(--accent-blue, #64ffda);
 }
 
-/* Warna khusus Card Upload (Kuning) */
 .action-card.upload:hover {
     border-color: #ffd700;
     box-shadow: 0 4px 15px rgba(255, 215, 0, 0.1);
@@ -915,17 +887,16 @@ input:focus, textarea:focus, select:focus {
     line-height: 1.5;
 }
 
-/* --- CUSTOM TIMELINE E-PERFORMANCE (REVISI PRESISI PIXEL) --- */
 .timeline-container {
     position: relative;
-    padding-left: 45px; /* Ruang kiri dilegain dikit */
+    padding-left: 45px;
 }
 
 .timeline-container::before {
     content: '';
     position: absolute;
-    left: 13px; /* Posisi presisi di tengah-tengah titik */
-    top: 32px; /* Garis mulai TEPAT di balik titik pertama, nggak bablas ke atas */
+    left: 13px; 
+    top: 32px; 
     bottom: 20px;
     width: 2px;
     background: rgba(100, 255, 218, 0.2);
@@ -950,8 +921,8 @@ input:focus, textarea:focus, select:focus {
 .timeline-card::before {
     content: '';
     position: absolute;
-    left: -38px; /* Jarak titik ke card */
-    top: 25px; /* Titik sejajar manis dengan badge jam */
+    left: -38px; 
+    top: 25px; 
     width: 14px;
     height: 14px;
     border-radius: 50%; 
@@ -1010,7 +981,6 @@ input:focus, textarea:focus, select:focus {
     background: rgba(255, 255, 255, 0.02);
 }
 
-/* --- Badges Role --- */
 .badge-role-admin {
     background: rgba(100, 255, 218, 0.1);
     color: #64ffda;
@@ -1033,7 +1003,6 @@ input:focus, textarea:focus, select:focus {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* --- Tombol Aksi --- */
 .btn-action-edit {
     color: #64ffda;
     background: rgba(100, 255, 218, 0.05);
@@ -1065,7 +1034,6 @@ input:focus, textarea:focus, select:focus {
 
 .btn-action-delete:hover { background: rgba(255, 76, 76, 0.15); }
 
-/* --- Tombol Tambah --- */
 .btn-tambah-elit {
     background: #1a2a40;
     color: white;
@@ -1117,7 +1085,6 @@ input:focus, textarea:focus, select:focus {
     box-shadow: 0 0 10px rgba(100, 255, 218, 0.1);
 }
 
-/* Biar dropdown option nggak putih silau di Windows */
 .form-input-glass option {
     background: #0a192f;
     color: white;
@@ -1142,7 +1109,6 @@ input:focus, textarea:focus, select:focus {
     color: white;
 }
 
-/* --- DROPDOWN LOGOUT SIMPLE --- */
 .header-profile {
     position: relative;
     cursor: pointer;
@@ -1150,9 +1116,9 @@ input:focus, textarea:focus, select:focus {
 
 .profile-dropdown {
     position: absolute;
-    top: 150%; /* Jarak dari teks nama ke dropdown */
+    top: 150%; 
     right: 0;
-    background: #0a192f; /* Navy gelap biar kebaca */
+    background: #0a192f; 
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     min-width: 160px;
@@ -1162,7 +1128,7 @@ input:focus, textarea:focus, select:focus {
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.2s ease;
-    z-index: 9999; /* Biar ga nyelip di bawah panel */
+    z-index: 9999; 
 }
 
 .profile-dropdown.show {
@@ -1174,7 +1140,7 @@ input:focus, textarea:focus, select:focus {
 .dropdown-item {
     display: block;
     padding: 10px 20px;
-    color: #ff4c4c; /* Warna merah bahaya buat logout */
+    color: #ff4c4c; 
     text-decoration: none;
     font-size: 13px;
     font-weight: bold;
@@ -1185,18 +1151,15 @@ input:focus, textarea:focus, select:focus {
     background: rgba(255, 76, 76, 0.1);
 }
 
-/* Pastikan navbar punya z-index paling dewa */
 .navbar.glass {
     position: relative;
     z-index: 9999 !important; 
 }
 
-/* Pastikan dropdown lebih dewa lagi dari navbar */
 .profile-dropdown {
     z-index: 99999 !important;
 }
 
-/* Pastikan panel utama ngalah di bawah */
 .panel-utama {
     position: relative;
     z-index: 1;
