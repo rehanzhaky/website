@@ -17,7 +17,7 @@ include 'layouts/navbar.php';
 ?>
 
 <div class="dashboard-header">
-    <h2>Agenda Kegiatan Kanim</h2>
+    <h2>Agenda Kegiatan Kakanim</h2>
     <p>Pantau jadwal kegiatan, rapat, dan dokumentasi Kantor Imigrasi di sini.</p>
 </div>
 

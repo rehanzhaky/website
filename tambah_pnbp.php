@@ -5,14 +5,18 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-if (!isset($_SESSION['keuangan_unlocked']) || $_SESSION['keuangan_unlocked'] !== true) {
-    header("Location: akses_keuangan.php");
+// 1. PROTEKSI GERBANG UTAMA (Hanya Admin & Keuangan yang boleh masuk)
+$role_saat_ini = strtolower($_SESSION['role'] ?? '');
+if ($role_saat_ini !== 'admin_utama' && $role_saat_ini !== 'tu_keuangan') {
+    echo "<script>alert('Akses Ditolak! Khusus Bagian Keuangan dan Admin Utama.'); window.location.href='index.php';</script>";
     exit;
 }
 
 require_once 'config/koneksi.php';
 
-$is_admin = in_array(strtolower($_SESSION['role']), ['admin', 'admin_utama']);
+// 2. PENENTUAN TOMBOL TAMBAH LAPORAN
+// Karena ini menu keuangan, TU Keuangan dan Admin Utama sama-sama berhak nambah data
+$is_admin = in_array($role_saat_ini, ['admin_utama', 'tu_keuangan']);
 
 $mulai_tanggal  = $_GET['mulai_tanggal'] ?? date('Y-m-01'); 
 $sampai_tanggal = $_GET['sampai_tanggal'] ?? date('Y-m-t'); 
@@ -102,11 +106,6 @@ include 'layouts/navbar.php';
                             <a href="detail_pnbp.php?id=<?= $row['id'] ?>" class="btn-navy-pill" style="padding: 6px 15px; font-size: 11px; margin-bottom: 8px; display: inline-block;">
                                 👁️ Buka Rincian
                             </a>
-                            
-                            <?php if ($is_admin): ?>
-                                <br>
-                                <a href="hapus_laporan_pnbp.php?id=<?= $row['id'] ?>" onclick="return confirm('Hapus laporan ini beserta semua rincian di dalamnya?')" style="color: #ff4c4c; text-decoration: none; font-size: 11px; font-weight: bold;">Hapus Laporan</a>
-                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php 

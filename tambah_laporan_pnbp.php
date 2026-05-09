@@ -51,7 +51,7 @@ include 'layouts/navbar.php';
     <a href="laporan_pnbp.php" style="color: var(--text-white); text-decoration: none; opacity: 0.8;">← Kembali ke Daftar</a>
 </div>
 
-<div class="glass panel-utama" style="max-width: 800px;">
+<div class="glass panel-utama">
     
     <?php if (isset($error)): ?>
         <div style="background: rgba(255, 76, 76, 0.1); border: 1px solid rgba(255, 76, 76, 0.2); color: #ff4c4c; padding: 12px 15px; border-radius: 10px; margin-bottom: 20px; font-size: 13px; font-weight: 600;">
@@ -60,14 +60,26 @@ include 'layouts/navbar.php';
     <?php endif; ?>
 
     <form action="" method="POST">
-        <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Periode Laporan</h3>
+        <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Laporan Pembayaran PNBP K/L</h3>
         
         <div class="form-grid">
             <div class="form-group form-full">
-                <label>Tanggal Pencatatan Laporan</label>
-                <input type="date" name="tanggal_laporan" value="<?= date('Y-m-d') ?>" required>
+                <label>K/L</label>
+                <input type="text" name="k/l" placeholder="Contoh: Kementrian atau Lembaga" required autocomplete="off">
             </div>
+            <div class="form-group form-full">
+                <label>Unit Eselon I</label>
+                <input type="text" name="unit_eselon_i" placeholder="Contoh: Ditjen Imigrasi" required autocomplete="off">
+            </div>
+            <div class="form-group form-full">
+                <label>Satker</label>
+                <input type="text" name="satker" placeholder="Contoh: Imigrasi Kelas I TPI" required autocomplete="off">
+            </div>
+        </div>
 
+        <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Periode Laporan</h3>
+        
+        <div class="form-grid">
             <div class="form-group form-full" style="display: flex; gap: 15px;">
                 <div style="flex: 1;">
                     <label>Periode Mulai</label>
@@ -96,6 +108,10 @@ include 'layouts/navbar.php';
                 <div style="flex: 1;">
                     <label>Realisasi (Rp)</label>
                     <input type="number" name="realisasi" placeholder="Contoh: 150000000 (Tanpa titik)" required>
+                </div>
+                <div style="flex: 1;">
+                    <label>Sisa (Rp)</label>
+                    <input type="number" name="sisa" placeholder="Contoh: 150000000 (Tanpa titik)" required>
                 </div>
             </div>
 

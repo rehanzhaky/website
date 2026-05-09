@@ -7,19 +7,10 @@ if (!isset($_SESSION['user_id'])) {
 require_once 'config/koneksi.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nama_surat = $_POST['nama_surat'];
+    // Cuma nangkap data yang bener-bener ada di form sekarang
     $seksi = $_POST['seksi']; 
     $tanggal = $_POST['tanggal'];
-    $nama_pengaju = $_POST['nama_pengaju'];
     $diketahui_oleh = $_POST['diketahui_oleh'];
-    $keperluan = $_POST['keperluan'];
-
-    $bulan_romawi = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
-    $bulan_ini = $bulan_romawi[date('n')];
-    $tahun_ini = date('Y');
-    $stmt_cek = $pdo->query("SELECT COUNT(*) FROM pengajuan_inventaris WHERE YEAR(tanggal) = '$tahun_ini'");
-    $urutan = $stmt_cek->fetchColumn() + 1;
-    $nomor_surat = sprintf("%03d", $urutan) . "/SITAU/" . $bulan_ini . "/" . $tahun_ini;
 
     $lampiran_name = "";
     if (isset($_FILES['lampiran']) && $_FILES['lampiran']['error'] == 0) {
@@ -32,16 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         $pdo->beginTransaction();
 
+        // Query Master dibersihkan dari nomor_surat, nama_surat, nama_pengaju, dan keperluan
         $sql_master = "INSERT INTO pengajuan_inventaris 
-                       (nomor_surat, nama_surat, seksi, nama_pengaju, diketahui_oleh, keperluan, lampiran, tanggal, status) 
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
+                       (seksi, diketahui_oleh, lampiran, tanggal, status) 
+                       VALUES (?, ?, ?, ?, 'pending')";
         $stmt_master = $pdo->prepare($sql_master);
-        $stmt_master->execute([$nomor_surat, $nama_surat, $seksi, $nama_pengaju, $diketahui_oleh, $keperluan, $lampiran_name, $tanggal]);
+        $stmt_master->execute([$seksi, $diketahui_oleh, $lampiran_name, $tanggal]);
         
         $id_pengajuan = $pdo->lastInsertId();
 
         if (isset($_POST['nama_barang']) && is_array($_POST['nama_barang'])) {
-            // Sesuai gambar: pengajuan_inventaris_detail
             $sql_detail = "INSERT INTO pengajuan_inventaris_detail (id_pengajuan, nama_barang, jumlah, satuan, keterangan) VALUES (?, ?, ?, ?, ?)";
             $stmt_detail = $pdo->prepare($sql_detail);
 
@@ -69,3 +60,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die("Waduh Error Bos: " . $e->getMessage());
     }
 }
+?>

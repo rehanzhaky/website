@@ -4,6 +4,13 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
+
+$role = strtolower($_SESSION['role'] ?? '');
+if ($role !== 'admin_utama' && $role !== 'tu_keuangan') {
+    echo "<script>alert('Akses Ditolak! Anda bukan Admin Keuangan.'); window.location.href='index.php';</script>";
+    exit;
+}
+
 require_once 'config/koneksi.php';
 include 'layouts/header.php';
 include 'layouts/navbar.php';

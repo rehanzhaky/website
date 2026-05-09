@@ -75,11 +75,16 @@ include 'layouts/navbar.php';
 
             <div class="form-group">
                 <label>Status Akses (Role)</label>
-                <select name="role" required>
-                    <option value="" disabled selected>-- Pilih Role --</option>
-                    <option value="user">User Biasa</option>
-                    <option value="admin">Administrator</option>
-                </select>
+                <div class="form-group">
+                    <label>Hak Akses (Role)</label>
+                    <select name="role" required class="input-full-width">
+                        <option value="user">User Biasa (Seksi Lain)</option>
+                        <option value="tu_keuangan">Admin TU - Bagian Keuangan</option>
+                        <option value="tu_kepegawaian">Admin TU - Bagian Kepegawaian</option>
+                        <option value="tu_umum">Admin TU - Bagian Umum</option>
+                        <option value="admin_utama">Admin Utama (Akses Penuh)</option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-group">

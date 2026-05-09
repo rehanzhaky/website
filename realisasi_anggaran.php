@@ -4,6 +4,13 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
+
+$role_saat_ini = strtolower($_SESSION['role'] ?? '');
+if ($role_saat_ini !== 'admin_utama' && $role_saat_ini !== 'tu_keuangan') {
+    echo "<script>alert('Akses Ditolak! Anda tidak memiliki izin untuk melihat laporan keuangan.'); window.location.href='pilih_laporan.php';</script>";
+    exit;
+}
+
 require_once 'config/koneksi.php';
 
 $is_admin = in_array(strtolower($_SESSION['role']), ['admin', 'admin_utama']);

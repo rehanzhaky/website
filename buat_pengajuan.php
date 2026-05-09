@@ -25,14 +25,6 @@ include 'layouts/navbar.php';
         
         <div class="form-grid">
             <div class="form-group">
-                <label>Nama Surat Pengajuan</label>
-                <input type="text" name="nama_surat" required>
-            </div>
-            <div class="form-group">
-                <label>Tanggal Pengajuan</label>
-                <input type="date" name="tanggal" required>
-            </div>
-            <div class="form-group">
                 <label>Seksi / Subseksi</label>
                 <select name="seksi" required>
                     <option value="" disabled selected>-- Pilih Seksi / Subseksi --</option>
@@ -45,8 +37,8 @@ include 'layouts/navbar.php';
                 </select>
             </div>
             <div class="form-group">
-                <label>Nama Pengaju</label>
-                <input type="text" name="nama_pengaju" required>
+                <label>Tanggal Pengajuan</label>
+                <input type="date" name="tanggal" required>
             </div>
 
             <div class="form-group form-full">
@@ -71,11 +63,6 @@ include 'layouts/navbar.php';
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="form-group form-full">
-                <label>Keperluan</label>
-                <textarea name="keperluan" rows="4" required placeholder="Tuliskan tujuan pengadaan barang..."></textarea>
             </div>
         </div>
 

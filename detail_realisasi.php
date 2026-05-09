@@ -60,6 +60,7 @@ include 'layouts/navbar.php';
             <thead>
                 <tr>
                     <th rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid rgba(255,255,255,0.2);">No.</th>
+                    // ganti kode belanja ke "kode | nama satker"
                     <th rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid rgba(255,255,255,0.2);">
                         <?= $laporan['tipe_laporan'] == 'jenis_belanja' ? '(Kode) jenis belanja' : '(Kode) sumber dana' ?>
                     </th>

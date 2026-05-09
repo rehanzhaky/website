@@ -2,22 +2,35 @@
 session_start();
 require_once 'config/koneksi.php';
 
-if (!isset($_SESSION['user_id']) || (strtolower($_SESSION['role']) !== 'admin' && strtolower($_SESSION['role']) !== 'admin_utama')) {
-    header("Location: index.php");
+$role = strtolower($_SESSION['role'] ?? '');
+$akses_admin = ['admin_utama', 'tu_kepegawaian', 'tu_keuangan', 'tu_umum']; 
+
+if (!isset($_SESSION['user_id']) || !in_array($role, $akses_admin)) {
+    echo "<script>alert('Waduh! Anda tidak memiliki hak akses.'); window.location.href='daftar_pengajuan.php';</script>";
     exit;
 }
 
-$id_pengajuan = $_GET['id'] ?? null;
-$aksi         = $_GET['aksi'] ?? null;
+$id = $_GET['id'] ?? 0;
+$aksi = strtolower($_GET['aksi'] ?? '');
 
-if ($id_pengajuan && $aksi) {
-    $status_baru = ($aksi === 'terima') ? 'approve' : 'reject';
-
-    $sql = "UPDATE pengajuan_inventaris SET status = ? WHERE id = ?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$status_baru, $id_pengajuan]);
+if ($aksi === 'terima') {
+    $status_baru = 'approve';
+    $pesan = 'Mantap! Pengajuan berhasil di-ACC. ✅';
+} elseif ($aksi === 'tolak') {
+    $status_baru = 'reject';
+    $pesan = 'Pengajuan resmi DITOLAK. ❌';
+} else {
+    echo "<script>alert('Aksi tidak dikenali sistem!'); window.location.href='daftar_pengajuan.php';</script>";
+    exit;
 }
 
-header("Location: daftar_pengajuan.php");
-exit;
+try {
+    $sql = "UPDATE pengajuan_inventaris SET status = ? WHERE id = ?";
+    $stmt = $pdo->prepare($sql);
+    if ($stmt->execute([$status_baru, $id])) {
+        echo "<script>alert('$pesan'); window.location.href='daftar_pengajuan.php';</script>";
+    }
+} catch (Exception $e) {
+    die("Waduh, Error Database Bos: " . $e->getMessage());
+}
 ?>

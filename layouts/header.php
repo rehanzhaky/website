@@ -1,10 +1,20 @@
+<?php 
+$role_saat_ini = strtolower($_SESSION['role'] ?? 'user'); 
+
+$current_page = basename($_SERVER['PHP_SELF']);
+
+function is_active($page_array, $current) {
+    return in_array($current, $page_array) ? 'active-menu' : '';
+}
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SITAU - Sistem Tata Usaha</title>
-    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?= time(); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -15,16 +25,35 @@
         </div>
         
         <ul class="sidebar-menu">
-            <li><a href="index.php">Dashboard</a></li>
-            <?php if ($_SESSION['seksi'] == 'tata_usaha'): ?>
-                <li><a href="agenda_kegiatan.php">Kelola Agenda Kegiatan</a></li>
+            <a href="index.php" class="<?= is_active(['index.php'], $current_page) ?>">
+                Dashboard
+            </a>
+            
+            <a href="daftar_pengajuan.php" class="<?= is_active(['daftar_pengajuan.php', 'detail_pengajuan.php', 'buat_pengajuan.php', 'cetak.php'], $current_page) ?>">
+                Inventaris
+            </a>
+            
+            <a href="daftar_laporan_umum.php" class="<?= is_active(['daftar_laporan_umum.php', 'laporan_umum.php', 'upload_laporan_umum.php'], $current_page) ?>">
+                Laporan Umum
+            </a>
+            
+            <a href="daftar_eperformance.php" class="<?= is_active(['daftar_eperformance.php', 'e_performance.php', 'upload_eperformance.php', 'detail_eperformance.php'], $current_page) ?>">
+                E-Performance
+            </a>
+
+            <?php if ($role_saat_ini === 'admin_utama' || $role_saat_ini === 'tu_keuangan'): ?>
+                <a href="pilih_laporan.php" class="<?= is_active(['pilih_laporan.php', 'realisasi_anggaran.php', 'laporan_pnbp.php', 'detail_realisasi.php', 'tambah_realisasi.php', 'tambah_laporan_pnbp.php', 'akses_keuangan.php'], $current_page) ?>">
+                    Laporan Keuangan
+                </a>
             <?php endif; ?>
-            <li><a href="daftar_pengajuan.php">Inventaris</a></li>
-            <li><a href="pilih_laporan.php">Laporan Keuangan</a></li>
-            <li><a href="laporan_umum.php">Laporan Umum</a></li>
-            <li><a href="e-performance.php">E-performance</a></li>
-            <?php if ($_SESSION['role'] == 'admin_utama'): ?>
-                <li><a href="kelola_pengguna.php">Kelola Pengguna</a></li>
+
+            <?php if ($role_saat_ini === 'admin_utama' || $role_saat_ini === 'tu_kepegawaian'): ?>
+                <a href="kelola_pengguna.php" class="<?= is_active(['kelola_pengguna.php', 'edit_user.php', 'tambah_user.php'], $current_page) ?>">
+                    Kelola Pengguna
+                </a>
+                <a href="agenda_kegiatan.php" class="<?= is_active(['agenda_kegiatan.php', 'tambah_agenda.php'], $current_page) ?>">
+                    Agenda Kegiatan Kakanim
+                </a>
             <?php endif; ?>
         </ul>
     </aside>
