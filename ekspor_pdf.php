@@ -1,129 +1,143 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id'])) { exit; }
 require_once 'config/koneksi.php';
 
 $id_laporan = $_GET['id'] ?? null;
-if (!$id_laporan) {
-    exit("ID Laporan tidak ditemukan!");
-}
-
 $stmt = $pdo->prepare("SELECT * FROM laporan_realisasi WHERE id = ?");
 $stmt->execute([$id_laporan]);
 $laporan = $stmt->fetch();
 
-if (!$laporan) {
-    exit("Data laporan tidak ada!");
-}
+if (!$laporan) { exit('Data tidak ditemukan'); }
 
-$stmt_detail = $pdo->prepare("SELECT * FROM laporan_realisasi_detail WHERE id_laporan = ?");
-$stmt_detail->execute([$id_laporan]);
-$details = $stmt_detail->fetchAll();
+function rp($angka) { return number_format($angka ?: 0, 0, ',', '.'); }
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak PDF - Realisasi Anggaran</title>
+    <title>Cetak Laporan Realisasi</title>
     <style>
-        body {
-            font-family: 'Times New Roman', Times, serif; /* Font resmi laporan */
-            color: #000;
-            background-color: #fff;
-            margin: 0;
-            padding: 20px;
-        }
-        h2, h4 {
-            text-align: center;
-            margin: 5px 0;
-            text-transform: uppercase;
-        }
-        .info-tanggal {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            font-size: 12px; 
-        }
-        th, td {
-            border: 1px solid #000;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-            text-align: center;
-            vertical-align: middle;
-        }
+        body { font-family: 'Times New Roman', Times, serif; font-size: 12px; color: black; background: white; padding: 20px; }
+        .kop-surat { text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid black; padding: 8px; }
+        th { background-color: #f2f2f2; text-align: center; font-weight: bold; }
         .text-right { text-align: right; }
         .text-center { text-align: center; }
         .bold { font-weight: bold; }
-        
-        @page { margin: 15mm; }
+        hr { border: 0; border-top: 1px solid black; margin: 4px 0; }
+        @media print { @page { size: landscape; } }
     </style>
 </head>
-<body>
+<body onload="window.print()">
 
-    <h2>REALISASI BELANJA <?= $laporan['tipe_laporan'] == 'jenis_belanja' ? 'PER JENIS BELANJA' : 'PER SUMBER DANA' ?></h2>
-    <h4>KANTOR IMIGRASI KELAS I TANJUNGPINANG</h4>
-    <div class="info-tanggal">
-        Periode: <?= date('d M Y', strtotime($laporan['periode_mulai'])) ?> s/d <?= date('d M Y', strtotime($laporan['periode_sampai'])) ?>
+    <div class="kop-surat">
+        KEMENTERIAN HUKUM DAN HAK ASASI MANUSIA REPUBLIK INDONESIA<br>
+        KANTOR IMIGRASI KELAS I TPI TANJUNG PINANG<br>
+        <span style="font-size: 16px; margin-top: 10px; display: block;">
+            <?= $laporan['tipe_laporan'] == 'jenis_belanja' ? 'REALISASI BELANJA SATKER PER JENIS BELANJA' : 'REALISASI BELANJA SATKER PER SUMBER DANA' ?>
+        </span>
     </div>
+
+    <p><strong>Tanggal Laporan:</strong> <?= date('d F Y', strtotime($laporan['tanggal_laporan'])) ?><br>
+    <strong>Keterangan:</strong> <?= htmlspecialchars($laporan['keterangan']) ?></p>
 
     <table>
         <thead>
             <tr>
-                <th rowspan="2">No.</th>
-                <th rowspan="2"><?= $laporan['tipe_laporan'] == 'jenis_belanja' ? '(Kode) Jenis Belanja' : '(Kode) Sumber Dana' ?></th>
-                <th rowspan="2">Keterangan</th>
+                <th rowspan="2" style="width: 5%;">NO</th>
+                <th rowspan="2" style="width: 25%;">Kode | Nama Satker / Sumber Dana</th>
+                <th rowspan="2" style="width: 10%;">Keterangan</th>
                 <th colspan="3">Jenis Belanja</th>
-                <th rowspan="2">Total</th>
+                <th rowspan="2" style="width: 15%;">Total</th>
             </tr>
             <tr>
-                <th>Pegawai</th>
-                <th>Barang</th>
-                <th>Modal</th>
+                <th style="width: 15%;">Pegawai</th>
+                <th style="width: 15%;">Barang</th>
+                <th style="width: 15%;">Modal</th>
             </tr>
         </thead>
-        
         <tbody>
-            <?php
-            $no = 1;
-            foreach ($details as $row):
-                $total_realisasi = $row['realisasi_pegawai'] + $row['realisasi_barang'] + $row['realisasi_modal'];
-                $sisa_pegawai = $row['pagu'] - $row['realisasi_pegawai']; 
-                $sisa_barang = $row['pagu'] - $row['realisasi_barang']; 
-                $sisa_modal = $row['pagu'] - $row['realisasi_modal'];
-                $total_sisa = ($row['pagu'] * 3) - $total_realisasi; 
+            <?php if ($laporan['tipe_laporan'] == 'jenis_belanja'): 
+                $tot_pagu = $laporan['pagu_pegawai'] + $laporan['pagu_barang'] + $laporan['pagu_modal'];
+                $tot_real = $laporan['realisasi_pegawai'] + $laporan['realisasi_barang'] + $laporan['realisasi_modal'];
+                $tot_sisa = $laporan['sisa_pegawai'] + $laporan['sisa_barang'] + $laporan['sisa_modal'];
             ?>
                 <tr>
-                    <td rowspan="2" class="text-center" style="vertical-align: middle;"><?= $no++ ?></td>
-                    <td rowspan="2" style="vertical-align: middle;"><?= $row['kode_anggaran'] ?><br><small><?= $row['nama_anggaran'] ?></small></td>
-                    <td>Pagu Realisasi</td>
-                    <td class="text-right"><?= number_format($row['realisasi_pegawai'], 0, ',', '.') ?></td>
-                    <td class="text-right"><?= number_format($row['realisasi_barang'], 0, ',', '.') ?></td>
-                    <td class="text-right"><?= number_format($row['realisasi_modal'], 0, ',', '.') ?></td>
-                    <td class="text-right bold"><?= number_format($total_realisasi, 0, ',', '.') ?></td>
+                    <td rowspan="2" class="text-center">1</td>
+                    <td rowspan="2" class="bold">692823 | KANTOR IMIGRASI KELAS I TPI TANJUNG PINANG</td>
+                    <td class="text-center bold">PAGU <hr> REALISASI</td>
+                    <td class="text-right"><?= rp($laporan['pagu_pegawai']) ?> <hr> <?= rp($laporan['realisasi_pegawai']) ?></td>
+                    <td class="text-right"><?= rp($laporan['pagu_barang']) ?> <hr> <?= rp($laporan['realisasi_barang']) ?></td>
+                    <td class="text-right"><?= rp($laporan['pagu_modal']) ?> <hr> <?= rp($laporan['realisasi_modal']) ?></td>
+                    <td class="text-right bold"><?= rp($tot_pagu) ?> <hr> <?= rp($tot_real) ?></td>
                 </tr>
                 <tr>
-                    <td>Sisa</td>
-                    <td class="text-right"><?= number_format($sisa_pegawai, 0, ',', '.') ?></td>
-                    <td class="text-right"><?= number_format($sisa_barang, 0, ',', '.') ?></td>
-                    <td class="text-right"><?= number_format($sisa_modal, 0, ',', '.') ?></td>
-                    <td class="text-right bold"><?= number_format($total_sisa, 0, ',', '.') ?></td>
+                    <td class="text-center bold">SISA</td>
+                    <td class="text-right"><?= rp($laporan['sisa_pegawai']) ?></td>
+                    <td class="text-right"><?= rp($laporan['sisa_barang']) ?></td>
+                    <td class="text-right"><?= rp($laporan['sisa_modal']) ?></td>
+                    <td class="text-right bold"><?= rp($tot_sisa) ?></td>
                 </tr>
-            <?php endforeach; ?>
+            <?php else: 
+                // Kalkulasi Subtotal & Grandtotal Sumber Dana
+                $rm_p = $laporan['rm_pagu_pegawai'] + $laporan['rm_pagu_barang'] + $laporan['rm_pagu_modal'];
+                $rm_r = $laporan['rm_realisasi_pegawai'] + $laporan['rm_realisasi_barang'] + $laporan['rm_realisasi_modal'];
+                $rm_s = $laporan['rm_sisa_pegawai'] + $laporan['rm_sisa_barang'] + $laporan['rm_sisa_modal'];
+                $pnbp_p = $laporan['pnbp_pagu_pegawai'] + $laporan['pnbp_pagu_barang'] + $laporan['pnbp_pagu_modal'];
+                $pnbp_r = $laporan['pnbp_realisasi_pegawai'] + $laporan['pnbp_realisasi_barang'] + $laporan['pnbp_realisasi_modal'];
+                $pnbp_s = $laporan['pnbp_sisa_pegawai'] + $laporan['pnbp_sisa_barang'] + $laporan['pnbp_sisa_modal'];
+            ?>
+                <tr>
+                    <td rowspan="2" class="text-center">1</td>
+                    <td rowspan="2" class="bold">(A) RUPIAH MURNI</td>
+                    <td class="text-center bold">PAGU <hr> REALISASI</td>
+                    <td class="text-right"><?= rp($laporan['rm_pagu_pegawai']) ?> <hr> <?= rp($laporan['rm_realisasi_pegawai']) ?></td>
+                    <td class="text-right"><?= rp($laporan['rm_pagu_barang']) ?> <hr> <?= rp($laporan['rm_realisasi_barang']) ?></td>
+                    <td class="text-right"><?= rp($laporan['rm_pagu_modal']) ?> <hr> <?= rp($laporan['rm_realisasi_modal']) ?></td>
+                    <td class="text-right bold"><?= rp($rm_p) ?> <hr> <?= rp($rm_r) ?></td>
+                </tr>
+                <tr>
+                    <td class="text-center bold">SISA</td>
+                    <td class="text-right"><?= rp($laporan['rm_sisa_pegawai']) ?></td>
+                    <td class="text-right"><?= rp($laporan['rm_sisa_barang']) ?></td>
+                    <td class="text-right"><?= rp($laporan['rm_sisa_modal']) ?></td>
+                    <td class="text-right bold"><?= rp($rm_s) ?></td>
+                </tr>
+                <tr>
+                    <td rowspan="2" class="text-center">2</td>
+                    <td rowspan="2" class="bold">(D) PENERIMAAN NEGARA BUKAN PAJAK</td>
+                    <td class="text-center bold">PAGU <hr> REALISASI</td>
+                    <td class="text-right"><?= rp($laporan['pnbp_pagu_pegawai']) ?> <hr> <?= rp($laporan['pnbp_realisasi_pegawai']) ?></td>
+                    <td class="text-right"><?= rp($laporan['pnbp_pagu_barang']) ?> <hr> <?= rp($laporan['pnbp_realisasi_barang']) ?></td>
+                    <td class="text-right"><?= rp($laporan['pnbp_pagu_modal']) ?> <hr> <?= rp($laporan['pnbp_realisasi_modal']) ?></td>
+                    <td class="text-right bold"><?= rp($pnbp_p) ?> <hr> <?= rp($pnbp_r) ?></td>
+                </tr>
+                <tr>
+                    <td class="text-center bold">SISA</td>
+                    <td class="text-right"><?= rp($laporan['pnbp_sisa_pegawai']) ?></td>
+                    <td class="text-right"><?= rp($laporan['pnbp_sisa_barang']) ?></td>
+                    <td class="text-right"><?= rp($laporan['pnbp_sisa_modal']) ?></td>
+                    <td class="text-right bold"><?= rp($pnbp_s) ?></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="text-center bold">GRAND TOTAL</td>
+                    <td class="text-center bold">PAGU <hr> REALISASI</td>
+                    <td class="text-right bold"><?= rp($rm_p + $pnbp_p) ?> <hr> <?= rp($rm_r + $pnbp_r) ?></td>
+                    <td class="text-right bold"><?= rp($laporan['rm_pagu_barang'] + $laporan['pnbp_pagu_barang']) ?> <hr> <?= rp($laporan['rm_realisasi_barang'] + $laporan['pnbp_realisasi_barang']) ?></td>
+                    <td class="text-right bold"><?= rp($laporan['rm_pagu_modal'] + $laporan['pnbp_pagu_modal']) ?> <hr> <?= rp($laporan['rm_realisasi_modal'] + $laporan['pnbp_realisasi_modal']) ?></td>
+                    <td class="text-right bold"><?= rp($rm_p + $pnbp_p) ?> <hr> <?= rp($rm_r + $pnbp_r) ?></td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="text-center bold">TOTAL SISA ANGGARAN KESELURUHAN</td>
+                    <td class="text-right bold"><?= rp($laporan['rm_sisa_pegawai'] + $laporan['pnbp_sisa_pegawai']) ?></td>
+                    <td class="text-right bold"><?= rp($laporan['rm_sisa_barang'] + $laporan['pnbp_sisa_barang']) ?></td>
+                    <td class="text-right bold"><?= rp($laporan['rm_sisa_modal'] + $laporan['pnbp_sisa_modal']) ?></td>
+                    <td class="text-right bold"><?= rp($rm_s + $pnbp_s) ?></td>
+                </tr>
+            <?php endif; ?>
         </tbody>
     </table>
-
-    <script>
-        window.onload = function() {
-            window.print();
-        }
-    </script>
-
 </body>
 </html>

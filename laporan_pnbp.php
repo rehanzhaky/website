@@ -5,14 +5,17 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-if (!isset($_SESSION['keuangan_unlocked']) || $_SESSION['keuangan_unlocked'] !== true) {
-    header("Location: akses_keuangan.php");
+// 1. PROTEKSI ROLE (Pengganti keuangan_unlocked yang bikin error)
+$role_saat_ini = strtolower($_SESSION['role'] ?? '');
+if ($role_saat_ini !== 'admin_utama' && $role_saat_ini !== 'tu_keuangan') {
+    echo "<script>alert('Akses Ditolak! Khusus Bagian Keuangan dan Admin Utama.'); window.location.href='pilih_laporan.php';</script>";
     exit;
 }
 
 require_once 'config/koneksi.php';
 
-$is_admin = in_array(strtolower($_SESSION['role']), ['admin', 'admin_utama']);
+// 2. PERBAIKAN HAK AKSES TOMBOL (tu_keuangan sekarang bisa nambah data)
+$is_admin = in_array($role_saat_ini, ['admin_utama', 'tu_keuangan']);
 
 $mulai_tanggal  = $_GET['mulai_tanggal'] ?? date('Y-m-01'); 
 $sampai_tanggal = $_GET['sampai_tanggal'] ?? date('Y-m-t'); 
