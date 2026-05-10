@@ -9,7 +9,7 @@ include 'layouts/header.php';
 include 'layouts/navbar.php';
 
 // Sesuaikan daftar seksi ini dengan yang ada di kantormu
-$daftar_seksi = ['Tata Usaha', 'Tikkomkim', 'Intaltuskim', 'Inteldakim', 'Lantaskim'];
+$daftar_seksi = ['Tata Usaha', 'Tikkim', 'Intaltuskim', 'Inteldakim', 'Lantaskim'];
 ?>
 
 <div class="dashboard-header">
