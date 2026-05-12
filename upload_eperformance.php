@@ -75,7 +75,7 @@ include 'layouts/navbar.php';
         <h2>Unggah E-Performance</h2>
         <p>Seksi: <strong><?= htmlspecialchars($nama_seksi) ?></strong></p>
     </div>
-    <a href="detail_eperformance.php?seksi=<?= $slug_seksi ?>" style="color: var(--text-white); text-decoration: none; opacity: 0.8;">← Kembali</a>
+    <a href="e_performance.php?seksi=<?= $slug_seksi ?>" style="color: var(--text-white); text-decoration: none; opacity: 0.8;">← Kembali</a>
 </div>
 
 <div class="glass panel-utama" style="margin: 0 auto;">
