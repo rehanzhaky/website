@@ -29,11 +29,15 @@ include 'layouts/navbar.php';
                 <select name="seksi" required>
                     <option value="" disabled selected>-- Pilih Seksi / Subseksi --</option>
                     
-                    <option value="Tata usaha">Tata usaha</option>
-                    <option value="Lantaskim">Lantaskim</option>
-                    <option value="Intaltuskim">Intaltuskim</option>
-                    <option value="Inteldakim">Inteldakim</option>
-                    <option value="Tikkim">Tikkim</option>
+                    <option value="Tata usaha">Sub Bagian Tata Usaha (TU)</option>
+                    <option value="Tata usaha">Urusan Umum</option>
+                    <option value="Tata usaha">Urusan Kepegawaian</option>
+                    <option value="Tata usaha">Urusan Keuangan</option>
+                    <option value="Lantaskim">Seksi Lalu Lintas Keimigrasian (Lantaskim)</option>
+                    <option value="Intaltuskim">Seksi Izin Tinggal dan Status Keimigrasian (Intaltuskim)</option>
+                    <option value="Inteldakim">Seksi Intelijen dan Penindakan Keimigrasian (Inteldakim)</option>
+                    <option value="Tikim">Seksi Teknologi Informasi dan Komunikasi Keimigrasian (Tikkim)</option>
+                    <option value="TPi">Tempat Pemeriksaan Imigrasi (TPI)</option>
                 </select>
             </div>
             <div class="form-group">
@@ -47,8 +51,22 @@ include 'layouts/navbar.php';
                     
                     <select name="diketahui_oleh" required style="flex: 1;">
                         <option value="" disabled selected>-- Pilih Atasan --</option>
-                        <option value="Drs. Ahmad Fauzi, M.Si">Drs. Ahmad Fauzi, M.Si (Kasi IT)</option>
-                        <option value="Ir. Sri Wahyuni, M.M">Ir. Sri Wahyuni, M.M (Kabag Umum)</option>
+                        <option value="Robby Marteja, S.E">Robby Marteja, S.E</option>
+                        <option value="Sri Deswita Undariyani, S.AP">Sri Deswita Undariyani, S.AP</option>
+                        <option value="Faiza, S.IP">Faiza, S.IP</option>
+                        <option value="Lia Andini, S.AP">Lia Andini, S.AP</option>
+                        <option value="Kusmartono W., A.Md.Im., S.H. M.M">Kusmartono W., A.Md.Im., S.H. M.M</option>
+                        <option value="Alexander Sianturi, S.H">Alexander Sianturi, S.H</option>
+                        <option value="Made Hery Susanta, S.H">Made Hery Susanta, S.H</option>
+                        <option value="Daniel Maxrinto, S.H">Daniel Maxrinto, S.H</option>
+                        <option value="Gandhi Agung Wibowo, S.E">Gandhi Agung Wibowo, S.E</option>
+                        <option value="Fikky Amirullah, S.Tr.Im">Fikky Amirullah, S.Tr.Im</option>
+                        <option value="Baharuddin, S.H">Baharuddin, S.H</option>
+                        <option value="Herlis Fahmil Qur'ani, S.Tr.Im">Herlis Fahmil Qur'ani, S.Tr.Im</option>
+                        <option value="Yongki Sepriance, S.H">Yongki Sepriance, S.H</option>
+                        <option value="Muhammad Denny Ridwan, A.Md.Im., S.H">Muhammad Denny Ridwan, A.Md.Im., S.H</option>
+                        <option value="Edwin Budi Santika, S.Tr.Im">Edwin Budi Santika, S.Tr.Im</option>
+                        <option value="Sandy Rifki Enricko, S.H">Sandy Rifki Enricko, S.H</option>
                     </select>
                     
                     <div class="file-upload-container">
