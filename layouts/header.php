@@ -48,11 +48,18 @@ function is_active($page_array, $current) {
             <?php endif; ?>
 
             <?php if ($role_saat_ini === 'admin_utama' || $role_saat_ini === 'tu_kepegawaian'): ?>
-                <a href="kelola_pengguna.php" class="<?= is_active(['kelola_pengguna.php', 'edit_user.php', 'tambah_user.php'], $current_page) ?>">
-                    Kelola Pengguna
-                </a>
                 <a href="agenda_kegiatan.php" class="<?= is_active(['agenda_kegiatan.php', 'tambah_agenda.php'], $current_page) ?>">
                     Agenda Kegiatan Kakanim
+                </a>
+            <?php endif; ?>
+
+            <a href="arsip.php" class="<?= is_active(['arsip.php'], $current_page) ?>">
+                Arsip
+            </a>
+
+            <?php if ($role_saat_ini === 'admin_utama' || $role_saat_ini === 'tu_kepegawaian'): ?>
+                <a href="kelola_pengguna.php" class="<?= is_active(['kelola_pengguna.php', 'edit_user.php', 'tambah_user.php'], $current_page) ?>">
+                    Kelola Pengguna
                 </a>
             <?php endif; ?>
         </ul>
