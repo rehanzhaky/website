@@ -76,12 +76,12 @@ include 'layouts/navbar.php';
             <div class="form-group">
                 <label>Status Akses (Role)</label>
                 <div class="form-group">
-                    <label>Hak Akses (Role)</label>
                     <select name="role" required class="input-full-width">
                         <option value="user">User Biasa (Seksi Lain)</option>
                         <option value="tu_keuangan">Admin TU - Bagian Keuangan</option>
                         <option value="tu_kepegawaian">Admin TU - Bagian Kepegawaian</option>
                         <option value="tu_umum">Admin TU - Bagian Umum</option>
+                        <option value="tpi">Admin TPI - Bagian Pemeriksaan</option>
                         <option value="admin_utama">Admin Utama (Akses Penuh)</option>
                     </select>
                 </div>
@@ -92,9 +92,10 @@ include 'layouts/navbar.php';
                 <select name="seksi" required>
                     <option value="" disabled selected>-- Pilih Seksi / Bagian --</option>
                     <option value="Tata Usaha">Tata Usaha</option>
-                    <option value="TIKKIM">TIKKIM</option>
+                    <option value="TIKIM">TIKIM</option>
                     <option value="LANTASKIM">LANTASKIM</option>
                     <option value="INTELDAKIM">INTELDAKIM</option>
+                    <option value="TPI">TPI</option>
                 </select>
             </div>
         </div>
