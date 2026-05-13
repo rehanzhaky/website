@@ -1,14 +1,7 @@
 <?php
-session_start();
+@session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
-    exit;
-}
-
-// Proteksi akses
-$role_saat_ini = strtolower($_SESSION['role'] ?? '');
-if ($role_saat_ini !== 'admin_utama' && $role_saat_ini !== 'tu_keuangan') {
-    echo "<script>alert('Akses Ditolak!'); window.location.href='index.php';</script>";
     exit;
 }
 
@@ -21,13 +14,51 @@ if (!$id_laporan) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT * FROM laporan_pnbp WHERE id = ?");
-$stmt->execute([$id_laporan]);
-$laporan = $stmt->fetch();
+// 1. Ambil Data Master PNBP
+$stmt_master = $pdo->prepare("SELECT * FROM laporan_pnbp WHERE id = ?");
+$stmt_master->execute([$id_laporan]);
+$laporan = $stmt_master->fetch();
 
 if (!$laporan) {
     echo "<script>alert('Laporan tidak ditemukan!'); window.location.href='laporan_pnbp.php';</script>";
     exit;
+}
+
+// 2. Ambil Data Detail PNBP
+$stmt_detail = $pdo->prepare("SELECT * FROM laporan_pnbp_detail WHERE id_laporan = ?");
+$stmt_detail->execute([$id_laporan]);
+$raw_details = $stmt_detail->fetchAll();
+
+// ========================================================
+// MANTRA PENGGABUNGAN DATA (Sewa Tanah 425131 -> Sarpras 425151)
+// ========================================================
+$details = [];
+foreach ($raw_details as $row) {
+    $kode = $row['kode_akun'];
+    
+    // Kalau dia Sewa Tanah, selundupkan angkanya ke Sarpras
+    if ($kode == '425131') {
+        if (!isset($details['425151'])) {
+            $details['425151'] = [
+                'kode_akun' => '425151',
+                'nama_akun' => 'Pendapatan Penggunaan Sarana dan Prasarana sesuai dengan Tusi',
+                'target' => 0, 'realisasi' => 0, 'sisa' => 0
+            ];
+        }
+        $details['425151']['target'] += $row['target'];
+        $details['425151']['realisasi'] += $row['realisasi'];
+        $details['425151']['sisa'] += $row['sisa'];
+    } 
+    // Kalau akun normal lainnya, tambahin aja
+    else {
+        if (!isset($details[$kode])) {
+            $details[$kode] = $row;
+        } else {
+            $details[$kode]['target'] += $row['target'];
+            $details[$kode]['realisasi'] += $row['realisasi'];
+            $details[$kode]['sisa'] += $row['sisa'];
+        }
+    }
 }
 
 // Bantuan Format Rupiah
@@ -35,167 +66,198 @@ function rp($angka) {
     return number_format($angka ?: 0, 0, ',', '.');
 }
 
-// Hitung Grand Total
-$tot_target = $laporan['target_425131'] + $laporan['target_425151'] + $laporan['target_425211'] + $laporan['target_425212'] + $laporan['target_425213'] + $laporan['target_425214'];
-$tot_realisasi = $laporan['realisasi_425131'] + $laporan['realisasi_425151'] + $laporan['realisasi_425211'] + $laporan['realisasi_425212'] + $laporan['realisasi_425213'] + $laporan['realisasi_425214'];
-$tot_sisa = $laporan['sisa_425131'] + $laporan['sisa_425151'] + $laporan['sisa_425211'] + $laporan['sisa_425212'] + $laporan['sisa_425213'] + $laporan['sisa_425214'];
+// 3. Kalkulasi Total dari data yang sudah di-merge
+$tot_target = 0;
+$tot_realisasi = 0;
+$tot_sisa = 0;
+
+foreach ($details as $row) {
+    $tot_target += $row['target'];
+    $tot_realisasi += $row['realisasi'];
+    $tot_sisa += $row['sisa'];
+}
+$tot_persen = $tot_target > 0 ? number_format(($tot_realisasi / $tot_target) * 100, 2) : 0;
+$tahun_anggaran = date('Y', strtotime($laporan['tanggal_laporan']));
 
 include 'layouts/header.php';
 include 'layouts/navbar.php';
 ?>
 
-<div class="dashboard-header">
-    <h2>Detail Laporan PNBP 💰</h2>
-    <p><?= htmlspecialchars($laporan['keterangan']) ?></p>
+<div class="dashboard-header cetak-sembunyi" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+    <div>
+        <h2>Detail Laporan PNBP 💰</h2>
+        <p style="color: rgba(255,255,255,0.7);"><?= htmlspecialchars($laporan['keterangan']) ?></p>
+    </div>
+    
+    <div style="display: flex; gap: 12px;">
+        <a href="laporan_pnbp.php" style="padding: 10px 20px; background: rgba(255,255,255,0.05); color: #ffffff; border: 1px solid rgba(255,255,255,0.2); text-decoration: none; border-radius: 30px; font-size: 13px; font-weight: bold; transition: 0.3s;">
+            ⬅️ kembali
+        </a>
+        <button onclick="window.print()" style="padding: 10px 20px; background: #ffffff; color: #0a1128; border: none; cursor: pointer; font-weight: bold; border-radius: 30px; font-size: 13px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: 0.3s;">
+            🖨️ cetak / pdf
+        </button>
+    </div>
 </div>
 
-<div class="glass panel-utama" style="padding: 30px;">
+<div class="glass panel-utama panel-cetak" style="padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
     
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-        <div>
-            <a href="laporan_pnbp.php" class="btn-navy-pill" style="background: rgba(255,255,255,0.05); color: white; border-color: rgba(255,255,255,0.2);">
-                ⬅️ Kembali
-            </a>
-        </div>
-        
-        <div style="display: flex; gap: 10px;">
-            <a href="ekspor_pnbp_pdf.php?id=<?= $id_laporan ?>" target="_blank" class="btn-navy-pill" style="text-decoration: none; background: #ff4c4c; color: white; border: none;">
-                🖨️ Cetak / PDF
-            </a>
-            <a href="ekspor_pnbp_excel.php?id=<?= $id_laporan ?>" class="btn-navy-pill" style="border-color: #50fa7b; color: #50fa7b; text-decoration: none; background: rgba(80, 250, 123, 0.1);">
-                📊 Excel
-            </a>
+    <div class="kop-laporan" style="margin-bottom: 25px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; color: #fff;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <div style="line-height: 1.6;">
+                <strong class="text-label">Kementerian/Lembaga:</strong> 137 - KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN<br>
+                <strong class="text-label">Unit Eselon I:</strong> 03 - DIREKTORAT JENDERAL IMIGRASI<br>
+                <strong class="text-label">Satuan Kerja:</strong> 692823 - KANTOR IMIGRASI KELAS I TPI TANJUNG PINANG
+            </div>
+            <div style="text-align: right; line-height: 1.6;">
+                <strong class="text-label">Tanggal Laporan:</strong> <?= date('d F Y', strtotime($laporan['tanggal_laporan'])) ?><br>
+                <strong class="text-label">Kategori:</strong> Penerimaan Negara Bukan Pajak (PNBP)
+            </div>
         </div>
     </div>
 
-    <div style="margin-bottom: 20px; font-size: 14px; color: #fff; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; border: 1px solid rgba(79, 172, 254, 0.3);">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
-            <div>
-                <strong style="color: #4facfe;">Kementerian/Lembaga:</strong><br>
-                13 - KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN
-            </div>
-            <div>
-                <strong style="color: #4facfe;">Unit Eselon I:</strong><br>
-                03 - DIREKTORAT JENDERAL IMIGRASI
-            </div>
-            <div style="text-align: right;">
-                <strong style="color: #4facfe;">Periode Laporan:</strong><br>
-                <?= date('d M Y', strtotime($laporan['periode_mulai'])) ?> s.d. <?= date('d M Y', strtotime($laporan['periode_sampai'])) ?>
-            </div>
-        </div>
-        <div>
-            <strong style="color: #4facfe;">Satuan Kerja:</strong><br>
-            692823 - KANTOR IMIGRASI KELAS I TPI TANJUNG PINANG
-        </div>
-    </div>
-
-    <h3 style="text-align: center; color: #4facfe; letter-spacing: 1px; margin-bottom: 20px;">
-        LAPORAN TARGET & REALISASI PNBP PER JENIS AKUN
-    </h3>
-
-    <div class="panel-tabel">
-        <table class="table-minimal" style="border: 1px solid rgba(255,255,255,0.2); width: 100%;">
+    <div style="overflow-x: auto;">
+        <table class="tabel-cetak" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; color: #ffffff;">
             <thead>
-                <tr style="background: rgba(79, 172, 254, 0.15);">
-                    <th style="text-align: center; border: 1px solid rgba(255,255,255,0.2); width: 25%; color: #4facfe;">Satuan Kerja</th>
-                    <th style="text-align: center; border: 1px solid rgba(255,255,255,0.2); width: 10%; color: #4facfe;">Kode Akun</th>
-                    <th style="text-align: center; border: 1px solid rgba(255,255,255,0.2); width: 35%; color: #4facfe;">Jenis Akun</th>
-                    <th style="text-align: center; border: 1px solid rgba(255,255,255,0.2); width: 15%; color: #4facfe;">Target</th>
-                    <th style="text-align: center; border: 1px solid rgba(255,255,255,0.2); width: 15%; color: #4facfe;">Realisasi</th>
+                <tr class="baris-header">
+                    <th class="sel-tabel" rowspan="2" style="text-align: center; width: 35%;">Realisasi Per Akun</th>
+                    <th class="sel-tabel" rowspan="2" style="text-align: center; width: 20%;">Target (Estimasi)</th>
+                    <th class="sel-tabel" colspan="2" style="text-align: center; width: 25%;">Realisasi TA <?= $tahun_anggaran ?></th>
+                    <th class="sel-tabel" rowspan="2" style="text-align: center; width: 20%;">Sisa Target</th>
+                </tr>
+                <tr class="baris-header">
+                    <th class="sel-tabel" style="text-align: center;">s.d. Periode</th>
+                    <th class="sel-tabel" style="text-align: center;">%</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td rowspan="6" style="vertical-align: middle; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; padding: 15px;">
-                        692823 - KANTOR IMIGRASI KELAS I TPI TANJUNG PINANG
-                    </td>
-                    <td style="text-align: center; border: 1px solid rgba(255,255,255,0.1);">425131</td>
-                    <td style="border: 1px solid rgba(255,255,255,0.1);">Pendapatan Sewa Tanah, Gedung, dan Bangunan</td>
-                    <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);"><?= rp($laporan['target_425131']) ?></td>
-                    <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);"><?= rp($laporan['realisasi_425131']) ?></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center; border: 1px solid rgba(255,255,255,0.1);">425151</td>
-                    <td style="border: 1px solid rgba(255,255,255,0.1);">Pendapatan Penggunaan Sarana dan Prasarana sesuai dengan Tusi</td>
-                    <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);"><?= rp($laporan['target_425151']) ?></td>
-                    <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);"><?= rp($laporan['realisasi_425151']) ?></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center; border: 1px solid rgba(255,255,255,0.1);">425211</td>
-                    <td style="border: 1px solid rgba(255,255,255,0.1);">Pendapatan Paspor</td>
-                    <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);"><?= rp($laporan['target_425211']) ?></td>
-                    <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);"><?= rp($laporan['realisasi_425211']) ?></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center; border: 1px solid rgba(255,255,255,0.1);">425212</td>
-                    <td style="border: 1px solid rgba(255,255,255,0.1);">Pendapatan Visa</td>
-                    <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);"><?= rp($laporan['target_425212']) ?></td>
-                    <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);"><?= rp($laporan['realisasi_425212']) ?></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center; border: 1px solid rgba(255,255,255,0.1);">425213</td>
-                    <td style="border: 1px solid rgba(255,255,255,0.1);">Pendapatan Izin Keimigrasian dan Izin Masuk Kembali (Re-entry permit)</td>
-                    <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);"><?= rp($laporan['target_425213']) ?></td>
-                    <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);"><?= rp($laporan['realisasi_425213']) ?></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center; border: 1px solid rgba(255,255,255,0.1);">425214</td>
-                    <td style="border: 1px solid rgba(255,255,255,0.1);">Pendapatan Pelayanan Keimigrasian Lainnya</td>
-                    <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);"><?= rp($laporan['target_425214']) ?></td>
-                    <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);"><?= rp($laporan['realisasi_425214']) ?></td>
+                <tr class="baris-total">
+                    <td class="sel-tabel" style="text-align: center; font-weight: bold; letter-spacing: 0.5px;">JUMLAH SELURUHNYA</td>
+                    <td class="sel-tabel angka-total" style="text-align: right;"><?= rp($tot_target) ?></td>
+                    <td class="sel-tabel angka-total" style="text-align: right;"><?= rp($tot_realisasi) ?></td>
+                    <td class="sel-tabel angka-total" style="text-align: right;"><?= $tot_persen ?>%</td>
+                    <td class="sel-tabel angka-total text-sisa" style="text-align: right;"><?= rp($tot_sisa) ?></td>
                 </tr>
 
-                <tr style="background: rgba(79, 172, 254, 0.1);">
-                    <td colspan="3" style="text-align: center; border: 1px solid rgba(255,255,255,0.2); font-weight: 900; color: #4facfe; font-size: 16px; padding: 15px;">
-                        TOTAL
-                    </td>
-                    <td style="text-align: right; border: 1px solid rgba(255,255,255,0.2); font-weight: 900; color: #4facfe; font-size: 16px;">
-                        <?= rp($tot_target) ?>
-                    </td>
-                    <td style="text-align: right; border: 1px solid rgba(255,255,255,0.2); font-weight: 900; color: #4facfe; font-size: 16px;">
-                        <?= rp($tot_realisasi) ?>
-                    </td>
-                </tr>
-                <tr style="background: rgba(255, 76, 76, 0.1);">
-                    <td colspan="3" style="text-align: right; border: 1px solid rgba(255,255,255,0.2); font-weight: 900; color: #ff5555; padding: 10px;">
-                        SISA TARGET YANG BELUM TERCAPAI
-                    </td>
-                    <td colspan="2" style="text-align: center; border: 1px solid rgba(255,255,255,0.2); font-weight: 900; color: #ff5555; font-size: 16px;">
-                        <?= rp($tot_sisa) ?>
-                    </td>
-                </tr>
+                <?php foreach ($details as $row): 
+                    $persen = $row['target'] > 0 ? number_format(($row['realisasi'] / $row['target']) * 100, 2) : 0;
+                ?>
+                    <tr class="baris-data" style="transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+                        <td class="sel-tabel" style="padding: 15px 12px;">
+                            <strong class="kode-komponen"><?= htmlspecialchars($row['kode_akun']) ?></strong> 
+                            <span style="opacity: 0.9;">- <?= htmlspecialchars($row['nama_akun']) ?></span>
+                        </td>
+                        <td class="sel-tabel" style="text-align: right; opacity: 0.9;"><?= rp($row['target']) ?></td>
+                        <td class="sel-tabel" style="text-align: right; opacity: 0.9;"><?= rp($row['realisasi']) ?></td>
+                        <td class="sel-tabel" style="text-align: right; opacity: 0.8;"><?= $persen ?>%</td>
+                        <td class="sel-tabel" style="text-align: right; opacity: 0.9;"><?= rp($row['sisa']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
 </div>
 
 <style>
+/* STYLE DEFAULT (TAMPILAN BROWSER - GLASSMORPHISM KALEM) */
+.sel-tabel {
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 12px;
+}
+.baris-header {
+    background: rgba(255, 255, 255, 0.05); /* Putih transparan */
+    color: rgba(255,255,255,0.9);
+}
+.baris-total {
+    background: rgba(255, 255, 255, 0.1); /* Putih transparan agak tebal */
+    color: #ffffff;
+}
+.angka-total {
+    font-weight: bold;
+    font-size: 14px;
+}
+.text-label {
+    color: rgba(255,255,255,0.6); /* Abu-abu kalem buat label */
+    font-weight: normal;
+}
+.kode-komponen {
+    color: #ffffff;
+    font-weight: bold;
+}
+.text-sisa {
+    color: #ffffff; 
+}
+
+/* STYLE KETIKA DI-PRINT (TAMPILAN KERTAS PUTIH) */
 @media print {
-    body * {
-        visibility: hidden;
+    /* Set orientasi kertas ke landscape otomatis */
+    @page {
+        size: landscape;
+        margin: 1cm;
     }
-    .panel-utama, .panel-utama * {
-        visibility: visible;
+    
+    body, html {
+        background: #ffffff !important;
+        color: #000000 !important;
     }
-    .panel-utama {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        box-shadow: none;
-        border: none;
-        background: white !important;
-        color: black !important;
-    }
-    th, td {
-        color: black !important;
-        border-color: #ddd !important;
-    }
-    h3, strong {
-        color: black !important;
-    }
-    button, a {
+    
+    .cetak-sembunyi, .sidebar, .navbar {
         display: none !important;
+    }
+    
+    /* 🔥 MANTRA PEMBUNUH BAYANGAN & LENGKUNGAN KACA 🔥 */
+    .glass, .panel-utama, .panel-cetak {
+        background: #ffffff !important;
+        box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        filter: none !important;
+        backdrop-filter: none !important;
+        border: none !important;
+        border-radius: 0 !important; /* Hilangin sudut melengkung */
+        padding: 0 !important;
+        margin: 0 !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+    }
+    
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color: #000000 !important;
+    }
+    
+    .kop-laporan {
+        border-bottom: 2px solid #000 !important;
+        color: #000 !important;
+    }
+    .text-label {
+        color: #000000 !important;
+        font-weight: bold !important;
+    }
+    .sel-tabel {
+        border: 1px solid #000000 !important;
+        padding: 8px !important;
+    }
+    .baris-header th {
+        background-color: #6D9EEB !important; /* Biru terang Kemenkeu */
+        color: #000000 !important;
+        font-weight: bold !important;
+    }
+    .baris-total td {
+        background-color: #A4C2F4 !important; /* Biru muda */
+        color: #000000 !important;
+        font-weight: normal !important;
+    }
+    .baris-data td {
+        background-color: #ffffff !important;
+    }
+    .kode-komponen {
+        color: #000000 !important;
+        font-weight: normal !important;
+    }
+    .text-sisa {
+        color: #000000 !important;
     }
 }
 </style>

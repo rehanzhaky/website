@@ -4,6 +4,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
+
 require_once 'config/koneksi.php';
 
 $id_laporan = $_GET['id'] ?? null;
@@ -13,218 +14,220 @@ if (!$id_laporan) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT * FROM laporan_realisasi WHERE id = ?");
-$stmt->execute([$id_laporan]);
-$laporan = $stmt->fetch();
+// 1. Ambil Data Master
+$stmt_master = $pdo->prepare("SELECT * FROM laporan_realisasi_bidang WHERE id = ?");
+$stmt_master->execute([$id_laporan]);
+$laporan = $stmt_master->fetch();
 
 if (!$laporan) {
     echo "<script>alert('Laporan tidak ditemukan!'); window.location.href='realisasi_anggaran.php';</script>";
     exit;
 }
 
+// 2. Ambil Data Detail
+$stmt_detail = $pdo->prepare("SELECT * FROM laporan_realisasi_bidang_detail WHERE id_laporan = ?");
+$stmt_detail->execute([$id_laporan]);
+$details = $stmt_detail->fetchAll();
+
 // Bantuan Format Rupiah
 function rp($angka) {
     return number_format($angka ?: 0, 0, ',', '.');
 }
 
+// 3. Kalkulasi Total
+$tot_pagu = 0;
+$tot_realisasi = 0;
+$tot_sisa = 0;
+
+foreach ($details as $row) {
+    $tot_pagu += $row['pagu'];
+    $tot_realisasi += $row['realisasi'];
+    $tot_sisa += $row['sisa'];
+}
+$tot_persen = $tot_pagu > 0 ? number_format(($tot_realisasi / $tot_pagu) * 100, 2) : 0;
+$tahun_anggaran = date('Y', strtotime($laporan['tanggal_laporan']));
+
 include 'layouts/header.php';
 include 'layouts/navbar.php';
 ?>
 
-<div class="dashboard-header">
-    <h2>Detail Realisasi Anggaran 🏛️</h2>
-    <p><?= htmlspecialchars($laporan['keterangan']) ?></p>
+<div class="dashboard-header cetak-sembunyi" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+    <div>
+        <h2>Detail Realisasi Bidang 🏛️</h2>
+        <p style="color: rgba(255,255,255,0.7);"><?= htmlspecialchars($laporan['keterangan']) ?></p>
+    </div>
+    
+    <div style="display: flex; gap: 12px;">
+        <a href="realisasi_anggaran.php" style="padding: 10px 20px; background: rgba(255,255,255,0.05); color: #ffffff; border: 1px solid rgba(255,255,255,0.2); text-decoration: none; border-radius: 30px; font-size: 13px; font-weight: bold; transition: 0.3s;">
+            ⬅️ kembali
+        </a>
+        <button onclick="window.print()" style="padding: 10px 20px; background: #ffffff; color: #0a1128; border: none; cursor: pointer; font-weight: bold; border-radius: 30px; font-size: 13px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: 0.3s;">
+            🖨️ cetak / pdf
+        </button>
+    </div>
 </div>
 
-<div class="glass panel-utama" style="padding: 30px;">
+<div class="glass panel-utama panel-cetak" style="padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
     
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-        <div>
-            <a href="realisasi_anggaran.php?tab=<?= $laporan['tipe_laporan'] ?>" class="btn-navy-pill" style="background: rgba(255,255,255,0.05); color: white; border-color: rgba(255,255,255,0.2);">
-                ⬅️ Kembali
-            </a>
-        </div>
-        
-        <div style="display: flex; gap: 10px;">
-            <a href="ekspor_pdf.php?id=<?= $id_laporan ?>" target="_blank" class="btn-navy-pill" style="text-decoration: none; background: #ff4c4c; color: white; border: none;">
-                🖨️ Cetak / PDF
-            </a>
-            <a href="ekspor_excel.php?id=<?= $id_laporan ?>" class="btn-navy-pill" style="border-color: #50fa7b; color: #50fa7b; text-decoration: none; background: rgba(80, 250, 123, 0.1);">
-                📊 Excel
-            </a>
+    <div class="kop-laporan" style="margin-bottom: 25px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; color: #fff;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <div style="line-height: 1.6;">
+                <strong class="text-label">Kementerian/Lembaga:</strong> 137 - KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN<br>
+                <strong class="text-label">Unit Eselon I:</strong> 03 - DIREKTORAT JENDERAL IMIGRASI<br>
+                <strong class="text-label">Satuan Kerja:</strong> 692823 - KANTOR IMIGRASI KELAS I TPI TANJUNG PINANG
+            </div>
+            <div style="text-align: right; line-height: 1.6;">
+                <strong class="text-label">Tanggal Laporan:</strong> <?= date('d F Y', strtotime($laporan['tanggal_laporan'])) ?><br>
+                <strong class="text-label">Seksi / Bidang:</strong> <?= htmlspecialchars($laporan['seksi']) ?>
+            </div>
         </div>
     </div>
 
-    <div style="margin-bottom: 20px; font-size: 14px; opacity: 0.9; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border-left: 4px solid #64ffda;">
-        📅 <strong>Tanggal Laporan:</strong> <?= date('d M Y', strtotime($laporan['tanggal_laporan'])) ?> &nbsp; | &nbsp; 
-        🏷️ <strong>Kategori:</strong> <?= $laporan['tipe_laporan'] == 'jenis_belanja' ? 'REKAP JENIS BELANJA' : 'REKAP SUMBER DANA' ?>
-    </div>
-
-    <div class="panel-tabel">
-        <table class="table-minimal" style="border: 1px solid rgba(255,255,255,0.1); width: 100%;">
+    <div style="overflow-x: auto;">
+        <table class="tabel-cetak" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; color: #ffffff;">
             <thead>
-                <tr style="background: rgba(255,255,255,0.05);">
-                    <th rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid rgba(255,255,255,0.2); width: 5%;">NO</th>
-                    <th rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid rgba(255,255,255,0.2); width: 25%;">
-                        <?= $laporan['tipe_laporan'] == 'jenis_belanja' ? 'Kode | Nama Satker' : '(Kode) Sumber Dana' ?>
-                    </th>
-                    <th rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid rgba(255,255,255,0.2); width: 10%;">Keterangan</th>
-                    <th colspan="3" style="text-align: center; border: 1px solid rgba(255,255,255,0.2);">Jenis Belanja</th>
-                    <th rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid rgba(255,255,255,0.2); width: 15%;">Total</th>
+                <tr class="baris-header">
+                    <th class="sel-tabel" rowspan="2" style="text-align: center; width: 35%;">Realisasi Per Bidang</th>
+                    <th class="sel-tabel" rowspan="2" style="text-align: center; width: 20%;">Pagu</th>
+                    <th class="sel-tabel" colspan="2" style="text-align: center; width: 25%;">Realisasi TA <?= $tahun_anggaran ?></th>
+                    <th class="sel-tabel" rowspan="2" style="text-align: center; width: 20%;">Sisa Anggaran</th>
                 </tr>
-                <tr style="background: rgba(255,255,255,0.05);">
-                    <th style="text-align: center; border: 1px solid rgba(255,255,255,0.2); width: 15%;">Pegawai</th>
-                    <th style="text-align: center; border: 1px solid rgba(255,255,255,0.2); width: 15%;">Barang</th>
-                    <th style="text-align: center; border: 1px solid rgba(255,255,255,0.2); width: 15%;">Modal</th>
+                <tr class="baris-header">
+                    <th class="sel-tabel" style="text-align: center;">Periode</th>
+                    <th class="sel-tabel" style="text-align: center;">%</th>
                 </tr>
             </thead>
-            
             <tbody>
-                <?php if ($laporan['tipe_laporan'] == 'jenis_belanja'): 
-                    // KALKULASI JENIS BELANJA
-                    $tot_pagu = $laporan['pagu_pegawai'] + $laporan['pagu_barang'] + $laporan['pagu_modal'];
-                    $tot_realisasi = $laporan['realisasi_pegawai'] + $laporan['realisasi_barang'] + $laporan['realisasi_modal'];
-                    $tot_sisa = $laporan['sisa_pegawai'] + $laporan['sisa_barang'] + $laporan['sisa_modal'];
+                <tr class="baris-total">
+                    <td class="sel-tabel" style="text-align: center; font-weight: bold; letter-spacing: 0.5px;">JUMLAH SELURUHNYA</td>
+                    <td class="sel-tabel angka-total" style="text-align: right;"><?= rp($tot_pagu) ?></td>
+                    <td class="sel-tabel angka-total" style="text-align: right;"><?= rp($tot_realisasi) ?></td>
+                    <td class="sel-tabel angka-total" style="text-align: right;"><?= $tot_persen ?>%</td>
+                    <td class="sel-tabel angka-total text-sisa" style="text-align: right;"><?= rp($tot_sisa) ?></td>
+                </tr>
+
+                <?php foreach ($details as $row): 
+                    $persen = $row['pagu'] > 0 ? number_format(($row['realisasi'] / $row['pagu']) * 100, 2) : 0;
                 ?>
-                    <tr>
-                        <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid rgba(255,255,255,0.1);">1</td>
-                        <td rowspan="2" style="vertical-align: middle; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #64ffda;">
-                            692823 | KANTOR IMIGRASI KELAS I TPI TANJUNG PINANG
+                    <tr class="baris-data" style="transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+                        <td class="sel-tabel" style="padding: 15px 12px;">
+                            <strong class="kode-komponen"><?= htmlspecialchars($row['kode_komponen']) ?></strong> 
+                            <span style="opacity: 0.9;"><?= htmlspecialchars($row['judul_komponen']) ?></span>
                         </td>
-                        <td style="border: 1px solid rgba(255,255,255,0.1); text-align: center; font-weight: bold;">
-                            PAGU <hr style="border:0; border-top:1px solid rgba(255,255,255,0.2); margin: 5px 0;"> REALISASI
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);">
-                            <?= rp($laporan['pagu_pegawai']) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 5px 0;"> <?= rp($laporan['realisasi_pegawai']) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);">
-                            <?= rp($laporan['pagu_barang']) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 5px 0;"> <?= rp($laporan['realisasi_barang']) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);">
-                            <?= rp($laporan['pagu_modal']) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 5px 0;"> <?= rp($laporan['realisasi_modal']) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #64ffda;">
-                            <?= rp($tot_pagu) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.2); margin: 5px 0;"> <?= rp($tot_realisasi) ?>
-                        </td>
+                        <td class="sel-tabel" style="text-align: right; opacity: 0.9;"><?= rp($row['pagu']) ?></td>
+                        <td class="sel-tabel" style="text-align: right; opacity: 0.9;"><?= rp($row['realisasi']) ?></td>
+                        <td class="sel-tabel" style="text-align: right; opacity: 0.8;"><?= $persen ?>%</td>
+                        <td class="sel-tabel" style="text-align: right; opacity: 0.9;"><?= rp($row['sisa']) ?></td>
                     </tr>
-                    <tr style="background: rgba(255, 76, 76, 0.05);">
-                        <td style="border: 1px solid rgba(255,255,255,0.1); text-align: center; font-weight: bold; color: #ffb86c;">SISA</td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); color: #ffb86c;"><?= rp($laporan['sisa_pegawai']) ?></td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); color: #ffb86c;"><?= rp($laporan['sisa_barang']) ?></td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); color: #ffb86c;"><?= rp($laporan['sisa_modal']) ?></td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #ff4c4c;"><?= rp($tot_sisa) ?></td>
-                    </tr>
-
-                <?php else: 
-                    // KALKULASI SUMBER DANA (RM & PNBP)
-                    $rm_tot_p = $laporan['rm_pagu_pegawai'] + $laporan['rm_pagu_barang'] + $laporan['rm_pagu_modal'];
-                    $rm_tot_r = $laporan['rm_realisasi_pegawai'] + $laporan['rm_realisasi_barang'] + $laporan['rm_realisasi_modal'];
-                    $rm_tot_s = $laporan['rm_sisa_pegawai'] + $laporan['rm_sisa_barang'] + $laporan['rm_sisa_modal'];
-
-                    $pnbp_tot_p = $laporan['pnbp_pagu_pegawai'] + $laporan['pnbp_pagu_barang'] + $laporan['pnbp_pagu_modal'];
-                    $pnbp_tot_r = $laporan['pnbp_realisasi_pegawai'] + $laporan['pnbp_realisasi_barang'] + $laporan['pnbp_realisasi_modal'];
-                    $pnbp_tot_s = $laporan['pnbp_sisa_pegawai'] + $laporan['pnbp_sisa_barang'] + $laporan['pnbp_sisa_modal'];
-                ?>
-                    <tr>
-                        <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid rgba(255,255,255,0.1);">1</td>
-                        <td rowspan="2" style="vertical-align: middle; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #c4b5fd;">
-                            (A) RUPIAH MURNI
-                        </td>
-                        <td style="border: 1px solid rgba(255,255,255,0.1); text-align: center; font-weight: bold;">
-                            PAGU <hr style="border:0; border-top:1px solid rgba(255,255,255,0.2); margin: 5px 0;"> REALISASI
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);">
-                            <?= rp($laporan['rm_pagu_pegawai']) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 5px 0;"> <?= rp($laporan['rm_realisasi_pegawai']) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);">
-                            <?= rp($laporan['rm_pagu_barang']) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 5px 0;"> <?= rp($laporan['rm_realisasi_barang']) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);">
-                            <?= rp($laporan['rm_pagu_modal']) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 5px 0;"> <?= rp($laporan['rm_realisasi_modal']) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #c4b5fd;">
-                            <?= rp($rm_tot_p) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.2); margin: 5px 0;"> <?= rp($rm_tot_r) ?>
-                        </td>
-                    </tr>
-                    <tr style="background: rgba(255, 76, 76, 0.05);">
-                        <td style="border: 1px solid rgba(255,255,255,0.1); text-align: center; font-weight: bold; color: #ffb86c;">SISA</td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); color: #ffb86c;"><?= rp($laporan['rm_sisa_pegawai']) ?></td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); color: #ffb86c;"><?= rp($laporan['rm_sisa_barang']) ?></td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); color: #ffb86c;"><?= rp($laporan['rm_sisa_modal']) ?></td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #ff4c4c;"><?= rp($rm_tot_s) ?></td>
-                    </tr>
-
-                    <tr>
-                        <td rowspan="2" style="text-align: center; vertical-align: middle; border: 1px solid rgba(255,255,255,0.1);">2</td>
-                        <td rowspan="2" style="vertical-align: middle; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #67e8f9;">
-                            (D) PENERIMAAN NEGARA BUKAN PAJAK
-                        </td>
-                        <td style="border: 1px solid rgba(255,255,255,0.1); text-align: center; font-weight: bold;">
-                            PAGU <hr style="border:0; border-top:1px solid rgba(255,255,255,0.2); margin: 5px 0;"> REALISASI
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);">
-                            <?= rp($laporan['pnbp_pagu_pegawai']) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 5px 0;"> <?= rp($laporan['pnbp_realisasi_pegawai']) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);">
-                            <?= rp($laporan['pnbp_pagu_barang']) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 5px 0;"> <?= rp($laporan['pnbp_realisasi_barang']) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1);">
-                            <?= rp($laporan['pnbp_pagu_modal']) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 5px 0;"> <?= rp($laporan['pnbp_realisasi_modal']) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #67e8f9;">
-                            <?= rp($pnbp_tot_p) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.2); margin: 5px 0;"> <?= rp($pnbp_tot_r) ?>
-                        </td>
-                    </tr>
-                    <tr style="background: rgba(255, 76, 76, 0.05);">
-                        <td style="border: 1px solid rgba(255,255,255,0.1); text-align: center; font-weight: bold; color: #ffb86c;">SISA</td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); color: #ffb86c;"><?= rp($laporan['pnbp_sisa_pegawai']) ?></td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); color: #ffb86c;"><?= rp($laporan['pnbp_sisa_barang']) ?></td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); color: #ffb86c;"><?= rp($laporan['pnbp_sisa_modal']) ?></td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #ff4c4c;"><?= rp($pnbp_tot_s) ?></td>
-                    </tr>
-
-                    <tr style="background: rgba(100, 255, 218, 0.1);">
-                        <td colspan="2" style="text-align: center; border: 1px solid rgba(255,255,255,0.2); font-weight: 900; color: #64ffda; font-size: 16px; padding: 15px;">
-                            GRAND TOTAL
-                        </td>
-                        <td style="border: 1px solid rgba(255,255,255,0.2); text-align: center; font-weight: bold; color: #64ffda;">
-                            PAGU <hr style="border:0; border-top:1px solid rgba(255,255,255,0.3); margin: 5px 0;"> REALISASI
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.2); font-weight: bold; color: #64ffda;">
-                            <?= rp($rm_tot_p + $pnbp_tot_p) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.3); margin: 5px 0;"> <?= rp($rm_tot_r + $pnbp_tot_r) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.2); font-weight: bold; color: #64ffda;">
-                            <?= rp($laporan['rm_pagu_barang'] + $laporan['pnbp_pagu_barang']) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.3); margin: 5px 0;"> <?= rp($laporan['rm_realisasi_barang'] + $laporan['pnbp_realisasi_barang']) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.2); font-weight: bold; color: #64ffda;">
-                            <?= rp($laporan['rm_pagu_modal'] + $laporan['pnbp_pagu_modal']) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.3); margin: 5px 0;"> <?= rp($laporan['rm_realisasi_modal'] + $laporan['pnbp_realisasi_modal']) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.2); font-weight: 900; color: #64ffda; font-size: 16px;">
-                            <?= rp($rm_tot_p + $pnbp_tot_p) ?> <hr style="border:0; border-top:1px solid rgba(255,255,255,0.3); margin: 5px 0;"> <?= rp($rm_tot_r + $pnbp_tot_r) ?>
-                        </td>
-                    </tr>
-                    <tr style="background: rgba(255, 76, 76, 0.1);">
-                        <td colspan="3" style="border: 1px solid rgba(255,255,255,0.2); text-align: center; font-weight: 900; color: #ff5555; font-size: 16px; padding: 15px;">
-                            TOTAL SISA ANGGARAN KESELURUHAN
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.2); font-weight: bold; color: #ffb86c; font-size: 14px;">
-                            <?= rp($laporan['rm_sisa_pegawai'] + $laporan['pnbp_sisa_pegawai']) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.2); font-weight: bold; color: #ffb86c; font-size: 14px;">
-                            <?= rp($laporan['rm_sisa_barang'] + $laporan['pnbp_sisa_barang']) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.2); font-weight: bold; color: #ffb86c; font-size: 14px;">
-                            <?= rp($laporan['rm_sisa_modal'] + $laporan['pnbp_sisa_modal']) ?>
-                        </td>
-                        <td style="text-align: right; border: 1px solid rgba(255,255,255,0.2); font-weight: 900; color: #ff5555; font-size: 16px;">
-                            <?= rp($rm_tot_s + $pnbp_tot_s) ?>
-                        </td>
-                    </tr>
-
-                <?php endif; ?>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
 </div>
+
+<style>
+/* STYLE DEFAULT (TAMPILAN BROWSER - GLASSMORPHISM KALEM) */
+.sel-tabel {
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 12px;
+}
+.baris-header {
+    background: rgba(255, 255, 255, 0.05); /* Putih transparan */
+    color: rgba(255,255,255,0.9);
+}
+.baris-total {
+    background: rgba(255, 255, 255, 0.1); /* Putih transparan agak tebal */
+    color: #ffffff;
+}
+.angka-total {
+    font-weight: bold;
+    font-size: 14px;
+}
+.text-label {
+    color: rgba(255,255,255,0.6); /* Abu-abu kalem buat label */
+    font-weight: normal;
+}
+.kode-komponen {
+    color: #ffffff;
+    font-weight: bold;
+}
+.text-sisa {
+    color: #ffffff; 
+}
+
+/* STYLE KETIKA DI-PRINT (TAMPILAN KERTAS PUTIH) */
+@media print {
+    /* Set orientasi kertas ke landscape otomatis */
+    @page {
+        size: landscape;
+        margin: 1cm;
+    }
+    
+    body, html {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+    
+    .cetak-sembunyi, .sidebar, .navbar {
+        display: none !important;
+    }
+    
+    /* 🔥 MANTRA PEMBUNUH BAYANGAN & LENGKUNGAN KACA 🔥 */
+    .glass, .panel-utama, .panel-cetak {
+        background: #ffffff !important;
+        box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        filter: none !important;
+        backdrop-filter: none !important;
+        border: none !important;
+        border-radius: 0 !important; /* Hilangin sudut melengkung */
+        padding: 0 !important;
+        margin: 0 !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+    }
+    
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color: #000000 !important;
+    }
+    
+    .kop-laporan {
+        border-bottom: 2px solid #000 !important;
+        color: #000 !important;
+    }
+    .text-label {
+        color: #000000 !important;
+        font-weight: bold !important;
+    }
+    .sel-tabel {
+        border: 1px solid #000000 !important;
+        padding: 8px !important;
+    }
+    .baris-header th {
+        background-color: #6D9EEB !important; /* Biru terang Kemenkeu */
+        color: #000000 !important;
+        font-weight: bold !important;
+    }
+    .baris-total td {
+        background-color: #A4C2F4 !important; /* Biru muda */
+        color: #000000 !important;
+        font-weight: normal !important;
+    }
+    .baris-data td {
+        background-color: #ffffff !important;
+    }
+    .kode-komponen {
+        color: #000000 !important;
+        font-weight: normal !important;
+    }
+    .text-sisa {
+        color: #000000 !important;
+    }
+}
+</style>
 
 <?php include 'layouts/footer.php'; ?>

@@ -90,6 +90,7 @@ include 'layouts/navbar.php';
     <div>
         <h2>Detail Pengajuan Inventaris</h2>
         <p>Rincian data permohonan barang masuk.</p>
+        <!-- Tambahin filter cari file per periode aja -->
     </div>
     <a href="daftar_pengajuan.php" style="color: var(--text-white); text-decoration: none; opacity: 0.8;">← Kembali ke Daftar</a>
 </div>

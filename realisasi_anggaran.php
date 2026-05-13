@@ -7,122 +7,135 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once 'config/koneksi.php';
 
-// Proteksi: Hanya Admin Utama dan TU Keuangan
+// ========================================================
+// LOGIKA HAK AKSES (ROLE-BASED ACCESS CONTROL)
+// ========================================================
 $role_saat_ini = strtolower($_SESSION['role'] ?? '');
-if ($role_saat_ini !== 'admin_utama' && $role_saat_ini !== 'tu_keuangan') {
-    echo "<script>alert('Akses Ditolak!'); window.location.href='index.php';</script>";
-    exit;
-}
+$bisa_edit = in_array($role_saat_ini, ['admin_utama', 'tu_keuangan']);
 
-// Ambil status Tab, default ke 'jenis_belanja'
-$tab_aktif = $_GET['tab'] ?? 'jenis_belanja';
 $mulai_tanggal  = $_GET['mulai_tanggal'] ?? date('Y-m-01'); 
 $sampai_tanggal = $_GET['sampai_tanggal'] ?? date('Y-m-t'); 
+$filter_seksi   = $_GET['seksi'] ?? '';
 
 include 'layouts/header.php';
 include 'layouts/navbar.php';
 ?>
 
-<div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
+<div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px;">
     <div>
-        <h2>Realisasi Anggaran 🏛️</h2>
-        <p>Manajemen laporan serapan anggaran kantor.</p>
+        <h2>Realisasi Anggaran Per Bidang 🏛️</h2>
+        <p>Manajemen pemantauan serapan anggaran masing-masing seksi.</p>
     </div>
     
-    <?php if ($tab_aktif == 'jenis_belanja'): ?>
-        <a href="tambah_realisasi.php" class="btn-shortcut" style="padding: 10px 20px; width: auto; font-size: 13px; background: #64ffda; color: #0a192f;">
-            + Tambah Jenis Belanja
-        </a>
-    <?php else: ?>
-        <a href="tambah_sumber_dana.php" class="btn-shortcut" style="padding: 10px 20px; width: auto; font-size: 13px; background: #c4b5fd; color: #0a192f;">
-            + Tambah Sumber Dana
+    <?php if ($bisa_edit): ?>
+        <a href="tambah_realisasi.php" class="btn-shortcut" style="padding: 12px 20px; width: auto; font-size: 13px; background: #ffffff; color: #0a192f; text-decoration: none; border-radius: 8px; font-weight: bold;">
+            + Tambah Laporan Realisasi
         </a>
     <?php endif; ?>
 </div>
 
-<div class="badge-btn-group" style="margin-bottom: 25px; display: flex; gap: 10px;">
-    <a href="?tab=jenis_belanja&mulai_tanggal=<?= $mulai_tanggal ?>&sampai_tanggal=<?= $sampai_tanggal ?>" 
-       class="badge-btn <?= $tab_aktif == 'jenis_belanja' ? 'badge-solid-primary' : 'badge-outline-primary' ?>" 
-       style="text-decoration: none; padding: 10px 20px; border-radius: 50px; font-size: 13px;">
-       📦 Per Jenis Belanja
-    </a>
-    <a href="?tab=sumber_dana&mulai_tanggal=<?= $mulai_tanggal ?>&sampai_tanggal=<?= $sampai_tanggal ?>" 
-       class="badge-btn <?= $tab_aktif == 'sumber_dana' ? 'badge-solid-info' : 'badge-outline-info' ?>" 
-       style="text-decoration: none; padding: 10px 20px; border-radius: 50px; font-size: 13px;">
-       🏦 Per Sumber Dana
-    </a>
-</div>
-
 <div class="glass panel-utama" style="padding: 30px;">
-    <form method="GET" action="" class="filter-pill-bar" style="margin-bottom: 30px;">
-        <input type="hidden" name="tab" value="<?= $tab_aktif ?>">
-        <div style="display: flex; align-items: center; gap: 15px;">
+    
+    <form method="GET" action="" style="margin-bottom: 35px;">
+        <div style="display: flex; align-items: flex-end; gap: 15px;">
             <div style="flex: 1;">
-                <label style="display:block; font-size:12px; margin-bottom:5px; opacity:0.7;">Dari Tanggal</label>
-                <input type="date" name="mulai_tanggal" class="input-full-width" value="<?= $mulai_tanggal ?>">
+                <label style="display:block; font-size:13px; margin-bottom:8px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: lowercase;">tanggal mulai</label>
+                <input type="date" name="mulai_tanggal" class="input-full-width" value="<?= $mulai_tanggal ?>" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 15px; border-radius: 10px;">
             </div>
             <div style="flex: 1;">
-                <label style="display:block; font-size:12px; margin-bottom:5px; opacity:0.7;">Sampai Tanggal</label>
-                <input type="date" name="sampai_tanggal" class="input-full-width" value="<?= $sampai_tanggal ?>">
+                <label style="display:block; font-size:13px; margin-bottom:8px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: lowercase;">tanggal akhir</label>
+                <input type="date" name="sampai_tanggal" class="input-full-width" value="<?= $sampai_tanggal ?>" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 15px; border-radius: 10px;">
             </div>
-            <div style="margin-top: 22px;">
-                <button type="submit" class="btn-navy-pill">Cari Data 🔍</button>
+            <div style="flex: 1.5;">
+                <label style="display:block; font-size:13px; margin-bottom:8px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: lowercase;">seksi / bidang</label>
+                <select name="seksi" class="input-full-width" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 15px; border-radius: 10px; font-size: 14px;">
+                    <option value="" style="color: black;">-- semua seksi --</option>
+                    <option value="LANTASKIM" style="color: black;" <?= $filter_seksi == 'LANTASKIM' ? 'selected' : '' ?>>LANTASKIM</option>
+                    <option value="INTALTUSKIM" style="color: black;" <?= $filter_seksi == 'INTALTUSKIM' ? 'selected' : '' ?>>INTALTUSKIM</option>
+                    <option value="INTELDAKIM" style="color: black;" <?= $filter_seksi == 'INTELDAKIM' ? 'selected' : '' ?>>INTELDAKIM</option>
+                    <option value="PEMERIKSAAN KEIMIGRASIAN (TPI)" style="color: black;" <?= $filter_seksi == 'PEMERIKSAAN KEIMIGRASIAN (TPI)' ? 'selected' : '' ?>>PEMERIKSAAN KEIMIGRASIAN (TPI)</option>
+                    <option value="URUSAN UMUM" style="color: black;" <?= $filter_seksi == 'URUSAN UMUM' ? 'selected' : '' ?>>URUSAN UMUM</option>
+                    <option value="TIKIM" style="color: black;" <?= $filter_seksi == 'TIKIM' ? 'selected' : '' ?>>TIKIM</option>
+                    <option value="LAYANAN PERKANTORAN" style="color: black;" <?= $filter_seksi == 'LAYANAN PERKANTORAN' ? 'selected' : '' ?>>LAYANAN PERKANTORAN</option>
+                    <option value="BELANJA MODAL" style="color: black;" <?= $filter_seksi == 'BELANJA MODAL' ? 'selected' : '' ?>>BELANJA MODAL</option>
+                    <option value="URUSAN KEPEGAWAIAN" style="color: black;" <?= $filter_seksi == 'URUSAN KEPEGAWAIAN' ? 'selected' : '' ?>>URUSAN KEPEGAWAIAN</option>
+                    <option value="URUSAN KEUANGAN" style="color: black;" <?= $filter_seksi == 'URUSAN KEUANGAN' ? 'selected' : '' ?>>URUSAN KEUANGAN</option>
+                    <option value="LAYANAN MANAJEMEN KINERJA INTERNAL" style="color: black;" <?= $filter_seksi == 'LAYANAN MANAJEMEN KINERJA INTERNAL' ? 'selected' : '' ?>>LAYANAN MANAJEMEN KINERJA INTERNAL</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" style="padding: 13px 25px; background: #0a1128; color: #ffffff; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; text-transform: lowercase; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                    terapkan filter 🔍
+                </button>
             </div>
         </div>
     </form>
 
     <div class="panel-tabel">
-        <table class="table-minimal">
+        <table class="table-minimal" style="width: 100%; border-collapse: collapse;">
             <thead>
-                <tr>
-                    <th style="width: 5%; text-align: center;">No.</th>
-                    <th style="width: 15%;">Tanggal</th>
-                    <th style="width: 35%;">Keterangan Laporan</th>
-                    <th style="width: 25%; text-align: center;">Total Realisasi</th>
-                    <th style="width: 20%; text-align: center;">Aksi</th>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.2);">
+                    <th style="width: 5%; text-align: center; padding: 15px; color: #ffffff; opacity: 0.8;">No.</th>
+                    <th style="width: 15%; padding: 15px; color: #ffffff; opacity: 0.8;">Tgl. Laporan</th>
+                    <th style="width: 25%; padding: 15px; color: #ffffff; opacity: 0.8;">Seksi / Bidang</th>
+                    <th style="width: 25%; padding: 15px; color: #ffffff; opacity: 0.8;">Keterangan</th>
+                    <th style="width: 15%; text-align: right; padding: 15px; color: #ffffff; opacity: 0.8;">Total Realisasi</th>
+                    <th style="width: 15%; text-align: center; padding: 15px; color: #ffffff; opacity: 0.8;">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                // Query data berdasarkan Tipe Tab dan Range Tanggal
-                $sql = "SELECT * FROM laporan_realisasi 
-                        WHERE tipe_laporan = :tab 
-                        AND tanggal_laporan BETWEEN :mulai AND :sampai 
-                        ORDER BY tanggal_laporan DESC";
+                $sql = "SELECT m.*, 
+                               (SELECT SUM(realisasi) FROM laporan_realisasi_bidang_detail d WHERE d.id_laporan = m.id) AS grand_realisasi
+                        FROM laporan_realisasi_bidang m 
+                        WHERE m.tanggal_laporan BETWEEN :mulai AND :sampai ";
+                
+                $params = [
+                    'mulai' => $mulai_tanggal, 
+                    'sampai' => $sampai_tanggal
+                ];
+
+                if (!empty($filter_seksi)) {
+                    $sql .= " AND m.seksi = :seksi ";
+                    $params['seksi'] = $filter_seksi;
+                }
+
+                $sql .= " ORDER BY m.tanggal_laporan DESC";
                 
                 $stmt = $pdo->prepare($sql);
-                $stmt->execute(['tab' => $tab_aktif, 'mulai' => $mulai_tanggal, 'sampai' => $sampai_tanggal]);
+                $stmt->execute($params);
                 $data = $stmt->fetchAll();
 
                 if (!$data): 
                 ?>
                     <tr>
-                        <td colspan="5" style="text-align: center; padding: 50px; opacity: 0.5;">
-                            Belum ada laporan di tab ini...
+                        <td colspan="6" style="text-align: center; padding: 50px; opacity: 0.5; color: #ffffff;">
+                            Belum ada laporan di periode atau seksi ini...
                         </td>
                     </tr>
                 <?php 
                 else: 
                     $no = 1;
                     foreach ($data as $row):
-                        // Hitung Total Realisasi buat ditampilin di daftar
-                        if ($tab_aktif == 'jenis_belanja') {
-                            $total_r = $row['realisasi_pegawai'] + $row['realisasi_barang'] + $row['realisasi_modal'];
-                        } else {
-                            $total_r = $row['rm_realisasi_pegawai'] + $row['rm_realisasi_barang'] + $row['rm_realisasi_modal'] + 
-                                       $row['pnbp_realisasi_pegawai'] + $row['pnbp_realisasi_barang'] + $row['pnbp_realisasi_modal'];
-                        }
                 ?>
-                    <tr>
-                        <td style="text-align: center;"><?= $no++ ?></td>
-                        <td><?= date('d/m/Y', strtotime($row['tanggal_laporan'])) ?></td>
-                        <td style="font-weight: bold;"><?= htmlspecialchars($row['keterangan']) ?></td>
-                        <td style="text-align: center; color: #64ffda;">Rp <?= number_format($total_r, 0, ',', '.') ?></td>
-                        <td style="text-align: center;">
-                            <a href="detail_realisasi.php?id=<?= $row['id'] ?>&tab=<?= $tab_aktif ?>" class="btn-navy-pill" style="padding: 5px 12px; font-size: 11px;">
-                                👁️ Lihat Detail
-                            </a>
-                            <a href="hapus_realisasi.php?id=<?= $row['id'] ?>" onclick="return confirm('Hapus laporan ini?')" style="color: #ff4c4c; font-size: 11px; margin-left: 10px; text-decoration: none;">Hapus</a>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+                        <td style="text-align: center; padding: 15px; color: #ffffff;"><?= $no++ ?></td>
+                        <td style="padding: 15px; color: #ffffff;"><?= date('d/m/Y', strtotime($row['tanggal_laporan'])) ?></td>
+                        <td style="padding: 15px; color: #ffffff; font-weight: 500; letter-spacing: 0.5px;"><?= htmlspecialchars($row['seksi']) ?></td>
+                        <td style="padding: 15px; color: rgba(255,255,255,0.8);"><?= htmlspecialchars($row['keterangan']) ?></td>
+                        <td style="text-align: right; color: #ffffff; padding: 15px; font-weight: 500; letter-spacing: 0.5px;">Rp <?= number_format($row['grand_realisasi'] ?: 0, 0, ',', '.') ?></td>
+                        <td style="padding: 15px;">
+                            <div style="display: flex; justify-content: center; gap: 8px;">
+                                <a href="detail_realisasi.php?id=<?= $row['id'] ?>" style="display: flex; align-items: center; justify-content: center; gap: 5px; padding: 6px 15px; font-size: 11px; color: #ffffff; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; text-decoration: none; font-weight: bold; white-space: nowrap;">
+                                    <span style="font-size: 13px; line-height: 1;">👁️</span> detail
+                                </a>
+                                
+                                <?php if ($bisa_edit): ?>
+                                    <a href="hapus_realisasi.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin ingin menghapus laporan ini?')" style="display: flex; align-items: center; justify-content: center; padding: 6px 15px; font-size: 11px; color: #ff4c4c; background: rgba(255,76,76,0.05); border: 1px solid rgba(255,76,76,0.3); border-radius: 20px; text-decoration: none; font-weight: bold; white-space: nowrap;">
+                                        hapus
+                                    </a>
+                                <?php endif; ?>
+                            </div>
                         </td>
                     </tr>
                 <?php 

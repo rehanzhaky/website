@@ -19,7 +19,7 @@ include 'layouts/navbar.php';
 </div>
 
 <?php
-$daftar_seksi = ['Tata Usaha', 'TIKKIM', 'Intaltuskim', 'Inteldakim', 'Lantaskim'];
+$daftar_seksi = ['Tata Usaha', 'TIKKIM', 'Intaltuskim', 'Inteldakim', 'Lantaskim', 'TPI'];
 
 foreach ($daftar_seksi as $seksi):
     if (!$is_admin && strtolower($seksi) !== strtolower($user_seksi)) {
