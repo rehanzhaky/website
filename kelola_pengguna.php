@@ -49,31 +49,31 @@ include 'layouts/navbar.php';
                 <tr>
                     <td><strong><?= htmlspecialchars($row['nama_lengkap']) ?></strong></td>
                     <td>
-                        <code style="background: rgba(255,255,255,0.1); padding: 3px 6px; border-radius: 4px; font-family: monospace;">
+                        <code style="background: var(--bg-secondary); padding: 3px 6px; border-radius: 4px; font-family: monospace; color: var(--text-primary);">
                             @<?= htmlspecialchars($row['username']) ?>
                         </code>
                     </td>
                     <td><?= htmlspecialchars($row['seksi']) ?: 'Belum Diatur' ?></td>
                     <td>
                         <?php if(in_array(strtolower($row['role']), ['admin', 'admin_utama'])): ?>
-                            <span class="badge badge-admin" style="background: rgba(100, 255, 218, 0.1); color: #64ffda; border: 1px solid rgba(100, 255, 218, 0.2);">
+                            <span class="badge badge-admin" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
                                 ADMINISTRATOR
                             </span>
                         <?php else: ?>
-                            <span class="badge badge-user" style="background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.5); border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <span class="badge badge-user" style="background: var(--bg-secondary); color: var(--text-muted); border: 1px solid var(--border-color);">
                                 USER BIASA
                             </span>
                         <?php endif; ?>
                     </td>
                     <td>
-                        <a href="edit_user.php?id=<?= $row['id'] ?>" style="color: #64ffda; text-decoration: none; font-weight: bold; margin-right: 15px;">Edit</a>
-                        <a href="hapus_user.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin mau hapus akun @<?= htmlspecialchars($row['username']) ?>?')" style="color: #ff4c4c; text-decoration: none; font-weight: bold;">Hapus</a>
+                        <a href="edit_user.php?id=<?= $row['id'] ?>" style="color: var(--blue-primary); text-decoration: none; font-weight: bold; margin-right: 15px;">Edit</a>
+                        <a href="hapus_user.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin mau hapus akun @<?= htmlspecialchars($row['username']) ?>?')" style="color: #dc2626; text-decoration: none; font-weight: bold;">Hapus</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="5" style="text-align: center; padding: 30px; opacity: 0.7;">
+                    <td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">
                         Belum ada data pengguna yang ditemukan.
                     </td>
                 </tr>

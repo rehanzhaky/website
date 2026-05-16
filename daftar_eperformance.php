@@ -21,9 +21,9 @@ $daftar_seksi = ['Sub Bag Tata Usaha', 'Tikkim', 'Intaltuskim', 'Inteldakim', 'L
             $slug = str_replace(' ', '_', $seksi);
         ?>
             <a href="e_performance.php?seksi=<?= $slug ?>" style="text-decoration: none;">
-                <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; color: var(--text-white); font-weight: bold; transition: all 0.3s; display: flex; justify-content: space-between; align-items: center;" onmouseover="this.style.background='rgba(79, 172, 254, 0.2)'; this.style.borderColor='#4facfe';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)';">
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 20px; border-radius: 10px; color: var(--text-primary); font-weight: bold; transition: all 0.3s; display: flex; justify-content: space-between; align-items: center;" onmouseover="this.style.background='var(--blue-lighter)'; this.style.borderColor='var(--blue-primary)';" onmouseout="this.style.background='var(--bg-secondary)'; this.style.borderColor='var(--border-color)';">
                     <span style="font-size: 15px;">📁 Seksi <?= $seksi ?></span>
-                    <span style="opacity: 0.6; font-size: 13px; font-weight: normal;">Buka Arsip →</span>
+                    <span style="color: var(--text-muted); font-size: 13px; font-weight: normal;">Buka Arsip →</span>
                 </div>
             </a>
         <?php endforeach; ?>

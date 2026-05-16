@@ -47,7 +47,7 @@ function is_active($page_array, $current) {
 
             <?php if ($role_saat_ini === 'admin_utama' || $role_saat_ini === 'tu_kepegawaian'): ?>
                 <a href="pilih_agenda.php" class="<?= is_active(['pilih_agenda.php', 'agenda_kegiatan.php', 'tambah_agenda.php', 'tambah_kegiatan_kakanim.php', 'tambah_rapat_kakanim.php', 'edit_agenda.php'], $current_page) ?>">
-                    Agenda Kegiatan Kakanim
+                    Agenda Kakanim
                 </a>
             <?php endif; ?>
 
