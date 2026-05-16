@@ -19,7 +19,7 @@ include 'layouts/navbar.php';
 
 <div class="dashboard-header">
     <h2>Daftar Pengguna Sistem</h2>
-    <p>Kelola hak akses, tambah akun, dan pantau data pegawai SITUAN PADUKA di sini.</p>
+    <p>Kelola hak akses, tambah akun, dan pantau data pegawai <strong style="color: #072749;">SITUAN PADUKA</strong> di sini.</p>
 </div>
 
 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px;">

@@ -20,8 +20,8 @@ function is_active($page_array, $current) {
 <body>
 
     <aside class="sidebar glass" id="sidebar">
-        <div style="text-align:center; padding-bottom: 20px; border-bottom: 1px solid var(--glass-border);">
-            <h2 style="letter-spacing: 2px;">MENU</h2>
+        <div style="text-align:center; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2);">
+            <h2 style="letter-spacing: 2px; color: #ffffff;">MENU</h2>
         </div>
         
         <ul class="sidebar-menu">

@@ -29,7 +29,7 @@ include 'layouts/navbar.php';
 <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
     <div>
         <h2>Pusat Arsip Digital 📂</h2>
-        <p>Manajemen data inventaris dan laporan umum <strong>SITUAN PADUKA</strong>.</p>
+        <p>Manajemen data inventaris dan laporan umum <strong style="color: #072749;">SITUAN PADUKA</strong>.</p>
     </div>
 </div>
 
@@ -49,33 +49,33 @@ include 'layouts/navbar.php';
         <input type="hidden" name="tab" value="<?= $tab_aktif ?>">
         <div class="filter-row-full" style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
             <div style="flex: 1;">
-                <label style="display:block; font-size:12px; margin-bottom:5px; opacity:0.7;">tanggal mulai</label>
+                <label style="display:block; font-size:12px; margin-bottom:5px; color: var(--text-secondary);">tanggal mulai</label>
                 <input type="date" name="mulai_tanggal" class="input-full-width" value="<?= $mulai_tanggal ?>" required>
             </div>
             <div style="flex: 1;">
-                <label style="display:block; font-size:12px; margin-bottom:5px; opacity:0.7;">tanggal akhir</label>
+                <label style="display:block; font-size:12px; margin-bottom:5px; color: var(--text-secondary);">tanggal akhir</label>
                 <input type="date" name="sampai_tanggal" class="input-full-width" value="<?= $sampai_tanggal ?>" required>
             </div>
             <div style="flex: 1;">
-                <label style="display:block; font-size:12px; margin-bottom:5px; opacity:0.7;">filter seksi</label>
-                <select name="seksi" class="input-full-width" style="padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); outline: none;">
-                    <option value="" style="background: #0a192f; color: white;">Semua Seksi</option>
-                    <option value="Sub Bag Tata Usaha" <?= $seksi_filter == 'Sub Bag Tata Usaha' ? 'selected' : '' ?> style="background: #0a192f; color: white;">Sub Bag Tata Usaha</option>
-                    <option value="Tikkomkim" <?= $seksi_filter == 'Tikkomkim' ? 'selected' : '' ?> style="background: #0a192f; color: white;">Tikkomkim</option>
-                    <option value="Intaltuskim" <?= $seksi_filter == 'Intaltuskim' ? 'selected' : '' ?> style="background: #0a192f; color: white;">Intaltuskim</option>
-                    <option value="Inteldakim" <?= $seksi_filter == 'Inteldakim' ? 'selected' : '' ?> style="background: #0a192f; color: white;">Inteldakim</option>
-                    <option value="Lantaskim" <?= $seksi_filter == 'Lantaskim' ? 'selected' : '' ?> style="background: #0a192f; color: white;">Lantaskim</option>
+                <label style="display:block; font-size:12px; margin-bottom:5px; color: var(--text-secondary);">filter seksi</label>
+                <select name="seksi" class="input-full-width" style="padding: 10px; border-radius: 10px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); outline: none;">
+                    <option value="" style="background: var(--bg-primary); color: var(--text-primary);">Semua Seksi</option>
+                    <option value="Sub Bag Tata Usaha" <?= $seksi_filter == 'Sub Bag Tata Usaha' ? 'selected' : '' ?> style="background: var(--bg-primary); color: var(--text-primary);">Sub Bag Tata Usaha</option>
+                    <option value="Tikkomkim" <?= $seksi_filter == 'Tikkomkim' ? 'selected' : '' ?> style="background: var(--bg-primary); color: var(--text-primary);">Tikkomkim</option>
+                    <option value="Intaltuskim" <?= $seksi_filter == 'Intaltuskim' ? 'selected' : '' ?> style="background: var(--bg-primary); color: var(--text-primary);">Intaltuskim</option>
+                    <option value="Inteldakim" <?= $seksi_filter == 'Inteldakim' ? 'selected' : '' ?> style="background: var(--bg-primary); color: var(--text-primary);">Inteldakim</option>
+                    <option value="Lantaskim" <?= $seksi_filter == 'Lantaskim' ? 'selected' : '' ?> style="background: var(--bg-primary); color: var(--text-primary);">Lantaskim</option>
                 </select>
             </div>
         </div>
         <div class="filter-row-full" style="display: flex; align-items: center; gap: 15px;">
             <div style="flex: 1;">
-                <label style="display:block; font-size:12px; margin-bottom:5px; opacity:0.7;">
+                <label style="display:block; font-size:12px; margin-bottom:5px; color: var(--text-secondary);">
                     🔍 cari <?= $tab_aktif == 'inventaris' ? 'nama barang' : 'judul laporan' ?>
                 </label>
                 <input type="text" name="search" class="input-full-width" value="<?= htmlspecialchars($search_nama) ?>" 
                        placeholder="Ketik untuk mencari..." 
-                       style="padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); outline: none;">
+                       style="padding: 10px; border-radius: 10px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); outline: none;">
             </div>
             <div style="margin-top: 22px;">
                 <button type="submit" class="btn-navy-pill">terapkan filter 🔍</button>
@@ -83,7 +83,7 @@ include 'layouts/navbar.php';
         </div>
     </form>
 
-    <h3 style="margin-top: 35px; margin-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+    <h3 style="margin-top: 35px; margin-bottom: 5px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
         <span style="font-size: 18px;">
             <?= $tab_aktif == 'inventaris' ? '📋 Riwayat Pengajuan Inventaris' : '📑 Arsip Laporan Umum' ?>
         </span>
@@ -149,49 +149,49 @@ include 'layouts/navbar.php';
 
                 if (!$data_arsip): 
                 ?>
-                    <tr><td colspan="6" style="text-align: center; padding: 50px; opacity: 0.5;">📂 Belum ada data arsip...</td></tr>
+                    <tr><td colspan="6" style="text-align: center; padding: 50px; opacity: 0.5; color: var(--text-primary);">📂 Belum ada data arsip...</td></tr>
                 <?php else: 
                     $no = 1;
                     foreach ($data_arsip as $row):
                 ?>
                     <tr>
-                        <td style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05);"><?= $no++ ?></td>
+                        <td style="text-align: center; border-bottom: 1px solid var(--border-color); color: var(--text-primary);"><?= $no++ ?></td>
                         <?php if ($tab_aktif == 'inventaris'): ?>
-                            <td style="font-weight: bold; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="font-weight: bold; color: var(--text-primary); border-bottom: 1px solid var(--border-color);">
                                 <?= htmlspecialchars($row['nama_barang'] ?? '-') ?>
                             </td>
-                            <td style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="border-bottom: 1px solid var(--border-color); color: var(--text-primary);">
                                 <?= htmlspecialchars($row['jumlah'] ?? '0') ?> Unit
                             </td>
-                            <td style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="border-bottom: 1px solid var(--border-color); color: var(--text-primary);">
                                 <?= htmlspecialchars($row['ruangan'] ?? $row['keterangan'] ?? '-') ?>
                             </td>
-                            <td style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="text-align: center; border-bottom: 1px solid var(--border-color);">
                                 <?php 
                                     $st = strtolower($row['status'] ?? 'pending');
-                                    $clr = ($st == 'approve' || $st == 'selesai') ? '#64ffda' : (($st == 'reject') ? '#ff4c4c' : '#ffb86c');
+                                    $clr = ($st == 'approve' || $st == 'selesai') ? '#10b981' : (($st == 'reject') ? '#dc2626' : '#f59e0b');
                                 ?>
                                 <span class="badge" style="background: rgba(255,255,255,0.05); color: <?= $clr ?>; border: 1px solid <?= $clr ?>;">
                                     <?= strtoupper($st) ?>
                                 </span>
                             </td>
-                            <td style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="text-align: center; border-bottom: 1px solid var(--border-color);">
                                 <a href="detail_inventaris.php?id=<?= $row['id_master'] ?>" class="btn-navy-pill" style="padding: 6px 15px; font-size: 11px;">👁️ detail</a>
                             </td>
                         <?php else: ?>
-                            <td style="color: #64ffda; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="color: var(--blue-primary); font-weight: bold; border-bottom: 1px solid var(--border-color);">
                                 <?= $list_bulan[$row['bulan']] ?? '-' ?> <?= $row['tahun'] ?? '' ?>
                             </td>
-                            <td style="font-weight: bold; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="font-weight: bold; color: var(--text-primary); border-bottom: 1px solid var(--border-color);">
                                 <?= htmlspecialchars($row['judul_laporan'] ?? '-') ?>
                             </td>
-                            <td style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                <span style="color: #bd93f9;"><?= htmlspecialchars($row['seksi'] ?? '-') ?></span>
+                            <td style="border-bottom: 1px solid var(--border-color);">
+                                <span style="color: var(--blue-secondary);"><?= htmlspecialchars($row['seksi'] ?? '-') ?></span>
                             </td>
-                            <td style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px;">
+                            <td style="text-align: center; border-bottom: 1px solid var(--border-color); font-size: 12px; color: var(--text-primary);">
                                 <?= date('d/m/Y', strtotime($row['tanggal_upload'])) ?>
                             </td>
-                            <td style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="text-align: center; border-bottom: 1px solid var(--border-color);">
                                 <a href="uploads/laporan_umum/<?= $row['nama_file'] ?>" target="_blank" class="btn-navy-pill" style="padding: 6px 15px; font-size: 11px;">📥 buka</a>
                             </td>
                         <?php endif; ?>

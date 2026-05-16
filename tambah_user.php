@@ -40,7 +40,7 @@ include 'layouts/navbar.php';
 <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
     <div>
         <h2>Tambah Pengguna Baru</h2>
-        <p>Daftarkan akses akun pegawai baru untuk sistem SITUAN PADUKA.</p>
+        <p>Daftarkan akses akun pegawai baru untuk sistem <strong style="color: #072749;">SITUAN PADUKA</strong>.</p>
     </div>
     <a href="kelola_pengguna.php" style="color: var(--text-white); text-decoration: none; opacity: 0.8;">← Kembali ke Daftar</a>
 </div>
