@@ -260,7 +260,7 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 0 25px;
-    background: var(--bg-primary);
+    background: #072749;
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-sm);
 }
@@ -269,7 +269,7 @@ body {
     font-size: 24px;
     font-weight: 800;
     letter-spacing: 3px;
-    color: #072749;
+    color: #ffffff;
 }
 
 .content-wrapper {

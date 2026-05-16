@@ -1,6 +1,6 @@
 <nav class="navbar glass">
     <div class="nav-left">
-        <button id="toggleBtn" style="background:none; border:none; color:white; cursor:pointer; font-size: 20px;">☰</button>
+        <button id="toggleBtn" style="background:none; border:none; color:#ffffff; cursor:pointer; font-size: 20px;">☰</button>
     </div>
     
     <div class="nav-brand">
@@ -8,7 +8,7 @@
     </div>
     
     <div class="nav-right header-profile" onclick="toggleDropdown(event)">
-        <span style="font-size: 14px; opacity: 0.9; font-weight: bold;">
+        <span style="font-size: 14px; opacity: 0.9; font-weight: bold; color: #ffffff;">
             Halo, <?= $_SESSION['nama_lengkap'] ?? 'Admin' ?> ▼
         </span>
 
