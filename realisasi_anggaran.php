@@ -22,16 +22,23 @@ include 'layouts/navbar.php';
 ?>
 
 <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px;">
-    <div>
-        <h2>Realisasi Anggaran Per Bidang 🏛️</h2>
-        <p>Manajemen pemantauan serapan anggaran masing-masing seksi.</p>
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <a href="pilih_laporan.php" style="padding: 10px 18px; background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; border-radius: 10px; font-size: 13px; font-weight: bold; border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;">
+            ← kembali
+        </a>
+        <div>
+            <h2>Realisasi Anggaran Per Bidang 🏛️</h2>
+            <p>Manajemen pemantauan serapan anggaran masing-masing seksi.</p>
+        </div>
     </div>
     
-    <?php if ($bisa_edit): ?>
-        <a href="tambah_realisasi.php" class="btn-shortcut" style="padding: 12px 20px; width: auto; font-size: 13px; background: #ffffff; color: #0a192f; text-decoration: none; border-radius: 8px; font-weight: bold;">
-            + Tambah Laporan Realisasi
-        </a>
-    <?php endif; ?>
+    <div>
+        <?php if ($bisa_edit): ?>
+            <a href="tambah_realisasi.php" class="btn-shortcut" style="padding: 12px 20px; width: auto; font-size: 13px; background: #ffffff; color: #0a192f; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                + Tambah Laporan Realisasi
+            </a>
+        <?php endif; ?>
+    </div>
 </div>
 
 <div class="glass panel-utama" style="padding: 30px;">

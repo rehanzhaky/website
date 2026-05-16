@@ -29,10 +29,10 @@ include 'layouts/navbar.php';
                 <select name="seksi" required>
                     <option value="" disabled selected>-- Pilih Seksi / Subseksi --</option>
                     
-                    <option value="Tata usaha">Sub Bagian Tata Usaha (TU)</option>
-                    <option value="Tata usaha">Urusan Umum</option>
-                    <option value="Tata usaha">Urusan Kepegawaian</option>
-                    <option value="Tata usaha">Urusan Keuangan</option>
+                    <option value="Sub Bag Tata Usaha">Sub Bagian Tata Usaha (TU)</option>
+                    <option value="Sub Bag Tata Usaha">Urusan Umum</option>
+                    <option value="Sub Bag Tata Usaha">Urusan Kepegawaian</option>
+                    <option value="Sub Bag Tata Usaha">Urusan Keuangan</option>
                     <option value="Lantaskim">Seksi Lalu Lintas Keimigrasian (Lantaskim)</option>
                     <option value="Intaltuskim">Seksi Izin Tinggal dan Status Keimigrasian (Intaltuskim)</option>
                     <option value="Inteldakim">Seksi Intelijen dan Penindakan Keimigrasian (Inteldakim)</option>

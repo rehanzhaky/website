@@ -5,6 +5,13 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+// Cek Role (Hanya Admin Utama & TU Keuangan yang boleh tambah)
+$role = strtolower($_SESSION['role'] ?? '');
+if (!in_array($role, ['admin_utama', 'tu_keuangan'])) {
+    echo "<script>alert('Akses Ditolak!'); window.location.href='realisasi_anggaran.php';</script>";
+    exit;
+}
+
 require_once 'config/koneksi.php';
 
 // Logic Simpan Data ke Database (Laporan Realisasi Per Bidang)
@@ -78,7 +85,14 @@ include 'layouts/navbar.php';
             
             <div class="form-group">
                 <label style="display: block; margin-bottom: 8px;">Keterangan / Periode</label>
-                <input type="text" name="keterangan" class="input-full-width" style="width: 100%; box-sizing: border-box;" placeholder="Contoh: Realisasi s.d. Mei 2026" required>
+                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                    <input type="month" id="pilih_periode" style="flex: 1; background: rgba(0,0,0,0.2); border: 1px solid rgba(100,255,218,0.5); color: #fff; padding: 12px; border-radius: 5px; font-size: 14px;">
+                    <button type="button" onclick="generateKeterangan()" style="padding: 12px 20px; background: rgba(100,255,218,0.2); color: #64ffda; border: 1px solid rgba(100,255,218,0.5); border-radius: 5px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                        📅 Generate
+                    </button>
+                </div>
+                <input type="text" name="keterangan" id="input_keterangan" class="input-full-width" style="width: 100%; box-sizing: border-box;" placeholder="Contoh: Realisasi s.d. Mei 2026" required>
+                <small style="color: rgba(255,255,255,0.5); font-size: 12px;">💡 Pilih bulan dan tahun, lalu klik Generate. Atau ketik manual.</small>
             </div>
         </div>
 
@@ -138,6 +152,23 @@ const dataSeksi = {
     ],
     "LAYANAN MANAJEMEN KINERJA INTERNAL": [{kode: "EBD Z32", judul: "Layanan Reformasi Kerja"}]
 };
+
+// Fungsi untuk generate keterangan dari pilihan periode
+function generateKeterangan() {
+    const pilihPeriode = document.getElementById('pilih_periode').value;
+    if (!pilihPeriode) {
+        alert('Silakan pilih bulan dan tahun terlebih dahulu! 📅');
+        return;
+    }
+    
+    const [tahun, bulan] = pilihPeriode.split('-');
+    const namaBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+                       'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    const bulanStr = namaBulan[parseInt(bulan) - 1];
+    
+    const keterangan = `Realisasi s.d. ${bulanStr} ${tahun}`;
+    document.getElementById('input_keterangan').value = keterangan;
+}
 
 function formatRupiah(angka) {
     if (!angka) return "0";

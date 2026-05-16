@@ -13,7 +13,7 @@ function is_active($page_array, $current) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SITAU - Sistem Tata Usaha</title>
+    <title>SITUAN PADUKA - Sistem Informasi Penatausahaan Terpadu Kanim Tanjungpinang</title>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= time(); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -41,14 +41,12 @@ function is_active($page_array, $current) {
                 E-Performance
             </a>
 
-            <?php if ($role_saat_ini === 'admin_utama' || $role_saat_ini === 'tu_keuangan'): ?>
-                <a href="pilih_laporan.php" class="<?= is_active(['pilih_laporan.php', 'realisasi_anggaran.php', 'laporan_pnbp.php', 'detail_realisasi.php', 'tambah_realisasi.php', 'tambah_laporan_pnbp.php', 'akses_keuangan.php'], $current_page) ?>">
-                    Laporan Keuangan
-                </a>
-            <?php endif; ?>
+            <a href="pilih_laporan.php" class="<?= is_active(['pilih_laporan.php', 'realisasi_anggaran.php', 'laporan_pnbp.php', 'detail_realisasi.php', 'tambah_realisasi.php', 'tambah_laporan_pnbp.php', 'detail_pnbp.php', 'akses_keuangan.php'], $current_page) ?>">
+                Laporan Keuangan
+            </a>
 
             <?php if ($role_saat_ini === 'admin_utama' || $role_saat_ini === 'tu_kepegawaian'): ?>
-                <a href="agenda_kegiatan.php" class="<?= is_active(['agenda_kegiatan.php', 'tambah_agenda.php'], $current_page) ?>">
+                <a href="pilih_agenda.php" class="<?= is_active(['pilih_agenda.php', 'agenda_kegiatan.php', 'tambah_agenda.php', 'tambah_kegiatan_kakanim.php', 'tambah_rapat_kakanim.php', 'edit_agenda.php'], $current_page) ?>">
                     Agenda Kegiatan Kakanim
                 </a>
             <?php endif; ?>

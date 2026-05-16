@@ -40,7 +40,7 @@ include 'layouts/navbar.php';
 <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
     <div>
         <h2>Tambah Pengguna Baru</h2>
-        <p>Daftarkan akses akun pegawai baru untuk sistem SITAU.</p>
+        <p>Daftarkan akses akun pegawai baru untuk sistem SITUAN PADUKA.</p>
     </div>
     <a href="kelola_pengguna.php" style="color: var(--text-white); text-decoration: none; opacity: 0.8;">← Kembali ke Daftar</a>
 </div>
@@ -91,7 +91,7 @@ include 'layouts/navbar.php';
                 <label>Seksi / Bagian</label>
                 <select name="seksi" required>
                     <option value="" disabled selected>-- Pilih Seksi / Bagian --</option>
-                    <option value="Tata Usaha">Tata Usaha</option>
+                    <option value="Sub Bag Tata Usaha">Sub Bag Tata Usaha</option>
                     <option value="TIKIM">TIKIM</option>
                     <option value="LANTASKIM">LANTASKIM</option>
                     <option value="INTELDAKIM">INTELDAKIM</option>

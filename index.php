@@ -24,7 +24,7 @@ elseif ($jam < 15) $sapaan = "Selamat Siang";
 elseif ($jam < 18) $sapaan = "Selamat Sore";
 else $sapaan = "Selamat Malam";
 
-$nama_user = $_SESSION['nama'] ?? $_SESSION['username'] ?? 'Pegawai SITAU';
+$nama_user = $_SESSION['nama'] ?? $_SESSION['username'] ?? 'Pegawai SITUAN PADUKA';
 
 include 'layouts/header.php';
 include 'layouts/navbar.php';
@@ -32,7 +32,7 @@ include 'layouts/navbar.php';
 
 <div class="dashboard-header" style="margin-bottom: 30px;">
     <h2><?= $sapaan ?>, <?= htmlspecialchars($nama_user) ?> 👋</h2>
-    <p>Ringkasan sistem tata usaha per tanggal <?= date('d F Y') ?></p>
+    <p>Ringkasan sistem penatausahaan per tanggal <?= date('d F Y') ?></p>
 </div>
 
 <div style="display: flex; gap: 20px; margin-bottom: 30px;">

@@ -4,7 +4,7 @@
     </div>
     
     <div class="nav-brand">
-        SITAU
+        SITUAN PADUKA
     </div>
     
     <div class="nav-right header-profile" onclick="toggleDropdown(event)">

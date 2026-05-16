@@ -105,7 +105,7 @@ include 'layouts/navbar.php';
             <div class="form-group">
                 <label>Seksi / Bagian</label>
                 <select name="seksi" required>
-                    <option value="Tata Usaha" <?= ($user_edit['seksi'] == 'Tata Usaha') ? 'selected' : '' ?>>Tata Usaha</option>
+                    <option value="Sub Bag Tata Usaha" <?= ($user_edit['seksi'] == 'Sub Bag Tata Usaha') ? 'selected' : '' ?>>Sub Bag Tata Usaha</option>
                     <option value="TIKKIM" <?= ($user_edit['seksi'] == 'TIKKIM') ? 'selected' : '' ?>>TIKKIM</option>
                     <option value="LANTASKIM" <?= ($user_edit['seksi'] == 'LANTASKIM') ? 'selected' : '' ?>>LANTASKIM</option>
                     <option value="INTELDAKIM" <?= ($user_edit['seksi'] == 'INTELDAKIM') ? 'selected' : '' ?>>INTELDAKIM</option>

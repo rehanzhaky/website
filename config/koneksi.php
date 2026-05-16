@@ -4,7 +4,7 @@
 $host = 'localhost';
 $dbname = 'db_tata_usaha';
 $username = 'root'; // Biasanya root
-$password = ''; // Biasanya kosong kalau XAMPP bawaan
+$password = 'ServBay.dev'; // Password MySQL
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);

@@ -36,27 +36,34 @@ $details = [];
 foreach ($raw_details as $row) {
     $kode = $row['kode_akun'];
     
+    // Hitung sisa (karena tidak ada di database)
+    $estimasi = $row['estimasi'] ?? 0;
+    $realisasi = $row['realisasi'] ?? 0;
+    $sisa = $estimasi - $realisasi;
+    
     // Kalau dia Sewa Tanah, selundupkan angkanya ke Sarpras
     if ($kode == '425131') {
         if (!isset($details['425151'])) {
             $details['425151'] = [
                 'kode_akun' => '425151',
                 'nama_akun' => 'Pendapatan Penggunaan Sarana dan Prasarana sesuai dengan Tusi',
-                'target' => 0, 'realisasi' => 0, 'sisa' => 0
+                'estimasi' => 0, 'realisasi' => 0, 'sisa' => 0
             ];
         }
-        $details['425151']['target'] += $row['target'];
-        $details['425151']['realisasi'] += $row['realisasi'];
-        $details['425151']['sisa'] += $row['sisa'];
+        $details['425151']['estimasi'] += $estimasi;
+        $details['425151']['realisasi'] += $realisasi;
+        $details['425151']['sisa'] += $sisa;
     } 
     // Kalau akun normal lainnya, tambahin aja
     else {
         if (!isset($details[$kode])) {
             $details[$kode] = $row;
+            $details[$kode]['estimasi'] = $estimasi;
+            $details[$kode]['sisa'] = $sisa;
         } else {
-            $details[$kode]['target'] += $row['target'];
-            $details[$kode]['realisasi'] += $row['realisasi'];
-            $details[$kode]['sisa'] += $row['sisa'];
+            $details[$kode]['estimasi'] += $estimasi;
+            $details[$kode]['realisasi'] += $realisasi;
+            $details[$kode]['sisa'] += $sisa;
         }
     }
 }
@@ -72,9 +79,9 @@ $tot_realisasi = 0;
 $tot_sisa = 0;
 
 foreach ($details as $row) {
-    $tot_target += $row['target'];
-    $tot_realisasi += $row['realisasi'];
-    $tot_sisa += $row['sisa'];
+    $tot_target += $row['estimasi'] ?? 0;
+    $tot_realisasi += $row['realisasi'] ?? 0;
+    $tot_sisa += $row['sisa'] ?? 0;
 }
 $tot_persen = $tot_target > 0 ? number_format(($tot_realisasi / $tot_target) * 100, 2) : 0;
 $tahun_anggaran = date('Y', strtotime($laporan['tanggal_laporan']));
@@ -92,6 +99,9 @@ include 'layouts/navbar.php';
     <div style="display: flex; gap: 12px;">
         <a href="laporan_pnbp.php" style="padding: 10px 20px; background: rgba(255,255,255,0.05); color: #ffffff; border: 1px solid rgba(255,255,255,0.2); text-decoration: none; border-radius: 30px; font-size: 13px; font-weight: bold; transition: 0.3s;">
             ⬅️ kembali
+        </a>
+        <a href="ekspor_detail_pnbp_excel.php?id=<?= $id_laporan ?>" style="padding: 10px 20px; background: rgba(40, 167, 69, 0.9); color: #ffffff; text-decoration: none; border-radius: 30px; font-size: 13px; font-weight: bold; transition: 0.3s;">
+            📊 ekspor excel
         </a>
         <button onclick="window.print()" style="padding: 10px 20px; background: #ffffff; color: #0a1128; border: none; cursor: pointer; font-weight: bold; border-radius: 30px; font-size: 13px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: 0.3s;">
             🖨️ cetak / pdf
@@ -139,17 +149,19 @@ include 'layouts/navbar.php';
                 </tr>
 
                 <?php foreach ($details as $row): 
-                    $persen = $row['target'] > 0 ? number_format(($row['realisasi'] / $row['target']) * 100, 2) : 0;
+                    $estimasi = $row['estimasi'] ?? 0;
+                    $realisasi = $row['realisasi'] ?? 0;
+                    $persen = $estimasi > 0 ? number_format(($realisasi / $estimasi) * 100, 2) : 0;
                 ?>
                     <tr class="baris-data" style="transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
                         <td class="sel-tabel" style="padding: 15px 12px;">
                             <strong class="kode-komponen"><?= htmlspecialchars($row['kode_akun']) ?></strong> 
                             <span style="opacity: 0.9;">- <?= htmlspecialchars($row['nama_akun']) ?></span>
                         </td>
-                        <td class="sel-tabel" style="text-align: right; opacity: 0.9;"><?= rp($row['target']) ?></td>
-                        <td class="sel-tabel" style="text-align: right; opacity: 0.9;"><?= rp($row['realisasi']) ?></td>
+                        <td class="sel-tabel" style="text-align: right; opacity: 0.9;"><?= rp($estimasi) ?></td>
+                        <td class="sel-tabel" style="text-align: right; opacity: 0.9;"><?= rp($realisasi) ?></td>
                         <td class="sel-tabel" style="text-align: right; opacity: 0.8;"><?= $persen ?>%</td>
-                        <td class="sel-tabel" style="text-align: right; opacity: 0.9;"><?= rp($row['sisa']) ?></td>
+                        <td class="sel-tabel" style="text-align: right; opacity: 0.9;"><?= rp($row['sisa'] ?? 0) ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

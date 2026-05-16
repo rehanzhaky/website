@@ -61,6 +61,9 @@ include 'layouts/navbar.php';
         <a href="realisasi_anggaran.php" style="padding: 10px 20px; background: rgba(255,255,255,0.05); color: #ffffff; border: 1px solid rgba(255,255,255,0.2); text-decoration: none; border-radius: 30px; font-size: 13px; font-weight: bold; transition: 0.3s;">
             ⬅️ kembali
         </a>
+        <a href="ekspor_detail_realisasi_excel.php?id=<?= $id_laporan ?>" style="padding: 10px 20px; background: rgba(40, 167, 69, 0.9); color: #ffffff; text-decoration: none; border-radius: 30px; font-size: 13px; font-weight: bold; transition: 0.3s;">
+            📊 ekspor excel
+        </a>
         <button onclick="window.print()" style="padding: 10px 20px; background: #ffffff; color: #0a1128; border: none; cursor: pointer; font-weight: bold; border-radius: 30px; font-size: 13px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: 0.3s;">
             🖨️ cetak / pdf
         </button>

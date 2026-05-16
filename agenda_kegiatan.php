@@ -32,7 +32,7 @@ include 'layouts/navbar.php';
     </div>
     
     <?php if ($bisa_edit): ?>
-        <a href="tambah_agenda.php" style="padding: 12px 20px; width: auto; font-size: 13px; background: #ffffff; color: #0a1128; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+        <a href="pilih_agenda.php" style="padding: 12px 20px; width: auto; font-size: 13px; background: #ffffff; color: #0a1128; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
             + tambah agenda
         </a>
     <?php endif; ?>
@@ -58,10 +58,11 @@ include 'layouts/navbar.php';
             <thead>
                 <tr style="border-bottom: 1px solid rgba(255,255,255,0.2);">
                     <th style="padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 15%;">TANGGAL</th>
-                    <th style="padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 25%;">NAMA KEGIATAN</th>
-                    <th style="padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 20%;">LOKASI</th>
+                    <th style="padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 20%;">NAMA KEGIATAN</th>
+                    <th style="padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 10%;">JENIS</th>
+                    <th style="padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 15%;">LOKASI</th>
                     <th style="padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 20%;">KETERANGAN</th>
-                    <th style="text-align: center; padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 10%;">DOK.</th>
+                    <th style="text-align: center; padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 10%;">DOKUMENTASI</th>
                     
                     <?php if ($bisa_edit): ?>
                         <th style="text-align: center; padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 10%;">AKSI</th>
@@ -78,6 +79,18 @@ include 'layouts/navbar.php';
                         <td style="padding: 15px; color: #ffffff; font-weight: 500;">
                             <?= htmlspecialchars($row['nama_kegiatan']) ?>
                         </td>
+                        <td style="padding: 15px;">
+                            <?php 
+                            $jenis = $row['jenis_agenda'] ?? 'umum';
+                            if ($jenis == 'kegiatan_kakanim') {
+                                echo '<span style="background: rgba(100,255,218,0.1); color: #64ffda; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid rgba(100,255,218,0.3);">🎯 Kegiatan</span>';
+                            } elseif ($jenis == 'rapat_kakanim') {
+                                echo '<span style="background: rgba(79,172,254,0.1); color: #4facfe; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid rgba(79,172,254,0.3);">📋 Rapat</span>';
+                            } else {
+                                echo '<span style="background: rgba(189,147,249,0.1); color: #bd93f9; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid rgba(189,147,249,0.3);">📌 Umum</span>';
+                            }
+                            ?>
+                        </td>
                         <td style="padding: 15px; color: rgba(255,255,255,0.8);">
                             📍 <?= htmlspecialchars($row['lokasi']) ?>
                         </td>
@@ -85,11 +98,20 @@ include 'layouts/navbar.php';
                             <?= htmlspecialchars($row['keterangan']) ?>
                         </td>
                         <td style="text-align: center; padding: 15px;">
-                            <?php if(!empty($row['dokumentasi'])): ?>
-                                <a href="uploads/agenda/<?= $row['dokumentasi'] ?>" target="_blank" style="color: #64ffda; text-decoration: none; font-weight: bold; font-size: 12px; border: 1px solid rgba(100,255,218,0.3); padding: 5px 10px; border-radius: 20px; background: rgba(100,255,218,0.05);">📷 lihat</a>
-                            <?php else: ?>
-                                <span style="color: rgba(255,255,255,0.3); font-size: 11px; font-style: italic;">kosong</span>
-                            <?php endif; ?>
+                            <div style="display: flex; flex-direction: column; gap: 5px; align-items: center;">
+                                <?php if(!empty($row['dokumentasi_png'])): ?>
+                                    <a href="uploads/agenda/<?= $row['dokumentasi_png'] ?>" target="_blank" style="color: #64ffda; text-decoration: none; font-weight: bold; font-size: 11px; border: 1px solid rgba(100,255,218,0.3); padding: 4px 10px; border-radius: 15px; background: rgba(100,255,218,0.05); white-space: nowrap;">📷 PNG</a>
+                                <?php endif; ?>
+                                <?php if(!empty($row['dokumentasi_pdf'])): ?>
+                                    <a href="uploads/agenda/<?= $row['dokumentasi_pdf'] ?>" target="_blank" style="color: #ff6b6b; text-decoration: none; font-weight: bold; font-size: 11px; border: 1px solid rgba(255,107,107,0.3); padding: 4px 10px; border-radius: 15px; background: rgba(255,107,107,0.05); white-space: nowrap;">📄 PDF</a>
+                                <?php endif; ?>
+                                <?php if(!empty($row['dokumentasi'])): ?>
+                                    <a href="uploads/agenda/<?= $row['dokumentasi'] ?>" target="_blank" style="color: #ffd93d; text-decoration: none; font-weight: bold; font-size: 11px; border: 1px solid rgba(255,217,61,0.3); padding: 4px 10px; border-radius: 15px; background: rgba(255,217,61,0.05); white-space: nowrap;">📁 File</a>
+                                <?php endif; ?>
+                                <?php if(empty($row['dokumentasi']) && empty($row['dokumentasi_png']) && empty($row['dokumentasi_pdf'])): ?>
+                                    <span style="color: rgba(255,255,255,0.3); font-size: 11px; font-style: italic;">kosong</span>
+                                <?php endif; ?>
+                            </div>
                         </td>
 
                         <?php if ($bisa_edit): ?>
@@ -108,7 +130,7 @@ include 'layouts/navbar.php';
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="<?= $bisa_edit ? '6' : '5' ?>" style="text-align: center; padding: 50px; opacity: 0.5; color: #ffffff;">
+                        <td colspan="<?= $bisa_edit ? '7' : '6' ?>" style="text-align: center; padding: 50px; opacity: 0.5; color: #ffffff;">
                             Belum ada agenda kegiatan yang dicatat atau ditemukan.
                         </td>
                     </tr>

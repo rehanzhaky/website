@@ -19,16 +19,23 @@ include 'layouts/navbar.php';
 ?>
 
 <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px;">
-    <div>
-        <h2>Daftar Laporan PNBP 💰</h2>
-        <p style="color: rgba(255,255,255,0.7);">Manajemen pemantauan Penerimaan Negara Bukan Pajak.</p>
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <a href="pilih_laporan.php" style="padding: 10px 18px; background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; border-radius: 10px; font-size: 13px; font-weight: bold; border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;">
+            ← kembali
+        </a>
+        <div>
+            <h2>Daftar Laporan PNBP 💰</h2>
+            <p style="color: rgba(255,255,255,0.7);">Manajemen pemantauan Penerimaan Negara Bukan Pajak.</p>
+        </div>
     </div>
     
-    <?php if ($bisa_edit): ?>
-        <a href="tambah_laporan_pnbp.php" class="btn-solid-primary" style="padding: 12px 20px; width: auto; font-size: 13px; background: #ffffff; color: #0a1128; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
-            + tambah laporan pnbp
-        </a>
-    <?php endif; ?>
+    <div>
+        <?php if ($bisa_edit): ?>
+            <a href="tambah_laporan_pnbp.php" class="btn-solid-primary" style="padding: 12px 20px; width: auto; font-size: 13px; background: #ffffff; color: #0a1128; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+                + tambah laporan pnbp
+            </a>
+        <?php endif; ?>
+    </div>
 </div>
 
 <div class="glass panel-utama" style="padding: 30px;">

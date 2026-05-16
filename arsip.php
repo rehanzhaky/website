@@ -14,6 +14,7 @@ $tab_aktif      = $_GET['tab'] ?? 'inventaris';
 $mulai_tanggal  = $_GET['mulai_tanggal'] ?? date('Y-m-01'); 
 $sampai_tanggal = $_GET['sampai_tanggal'] ?? date('Y-m-t'); 
 $seksi_filter   = $_GET['seksi'] ?? '';
+$search_nama    = $_GET['search'] ?? '';
 
 // Mapping Bulan Indo
 $list_bulan = [
@@ -28,16 +29,16 @@ include 'layouts/navbar.php';
 <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
     <div>
         <h2>Pusat Arsip Digital 📂</h2>
-        <p>Manajemen data inventaris dan laporan umum <strong>SITAU</strong>.</p>
+        <p>Manajemen data inventaris dan laporan umum <strong>SITUAN PADUKA</strong>.</p>
     </div>
 </div>
 
 <div class="badge-btn-group" style="margin-bottom: 20px;">
-    <a href="?tab=inventaris&mulai_tanggal=<?= $mulai_tanggal ?>&sampai_tanggal=<?= $sampai_tanggal ?>&seksi=<?= $seksi_filter ?>" 
+    <a href="?tab=inventaris&mulai_tanggal=<?= $mulai_tanggal ?>&sampai_tanggal=<?= $sampai_tanggal ?>&seksi=<?= $seksi_filter ?>&search=<?= urlencode($search_nama) ?>" 
        class="badge-btn <?= $tab_aktif == 'inventaris' ? 'badge-solid-primary' : 'badge-outline-primary' ?>">
        📦 Arsip Inventaris
     </a>
-    <a href="?tab=umum&mulai_tanggal=<?= $mulai_tanggal ?>&sampai_tanggal=<?= $sampai_tanggal ?>&seksi=<?= $seksi_filter ?>" 
+    <a href="?tab=umum&mulai_tanggal=<?= $mulai_tanggal ?>&sampai_tanggal=<?= $sampai_tanggal ?>&seksi=<?= $seksi_filter ?>&search=<?= urlencode($search_nama) ?>" 
        class="badge-btn <?= $tab_aktif == 'umum' ? 'badge-solid-info' : 'badge-outline-info' ?>">
        📝 Laporan Umum
     </a>
@@ -46,7 +47,7 @@ include 'layouts/navbar.php';
 <div class="glass panel-utama">
     <form method="GET" action="" class="filter-pill-bar">
         <input type="hidden" name="tab" value="<?= $tab_aktif ?>">
-        <div class="filter-row-full" style="display: flex; align-items: center; gap: 15px;">
+        <div class="filter-row-full" style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
             <div style="flex: 1;">
                 <label style="display:block; font-size:12px; margin-bottom:5px; opacity:0.7;">tanggal mulai</label>
                 <input type="date" name="mulai_tanggal" class="input-full-width" value="<?= $mulai_tanggal ?>" required>
@@ -59,12 +60,22 @@ include 'layouts/navbar.php';
                 <label style="display:block; font-size:12px; margin-bottom:5px; opacity:0.7;">filter seksi</label>
                 <select name="seksi" class="input-full-width" style="padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); outline: none;">
                     <option value="" style="background: #0a192f; color: white;">Semua Seksi</option>
-                    <option value="Tata Usaha" <?= $seksi_filter == 'Tata Usaha' ? 'selected' : '' ?> style="background: #0a192f; color: white;">Tata Usaha</option>
+                    <option value="Sub Bag Tata Usaha" <?= $seksi_filter == 'Sub Bag Tata Usaha' ? 'selected' : '' ?> style="background: #0a192f; color: white;">Sub Bag Tata Usaha</option>
                     <option value="Tikkomkim" <?= $seksi_filter == 'Tikkomkim' ? 'selected' : '' ?> style="background: #0a192f; color: white;">Tikkomkim</option>
                     <option value="Intaltuskim" <?= $seksi_filter == 'Intaltuskim' ? 'selected' : '' ?> style="background: #0a192f; color: white;">Intaltuskim</option>
                     <option value="Inteldakim" <?= $seksi_filter == 'Inteldakim' ? 'selected' : '' ?> style="background: #0a192f; color: white;">Inteldakim</option>
                     <option value="Lantaskim" <?= $seksi_filter == 'Lantaskim' ? 'selected' : '' ?> style="background: #0a192f; color: white;">Lantaskim</option>
                 </select>
+            </div>
+        </div>
+        <div class="filter-row-full" style="display: flex; align-items: center; gap: 15px;">
+            <div style="flex: 1;">
+                <label style="display:block; font-size:12px; margin-bottom:5px; opacity:0.7;">
+                    🔍 cari <?= $tab_aktif == 'inventaris' ? 'nama barang' : 'judul laporan' ?>
+                </label>
+                <input type="text" name="search" class="input-full-width" value="<?= htmlspecialchars($search_nama) ?>" 
+                       placeholder="Ketik untuk mencari..." 
+                       style="padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); outline: none;">
             </div>
             <div style="margin-top: 22px;">
                 <button type="submit" class="btn-navy-pill">terapkan filter 🔍</button>
@@ -111,17 +122,27 @@ include 'layouts/navbar.php';
                             JOIN pengajuan_inventaris_detail pid ON pi.id = pid.id_pengajuan 
                             WHERE 1=1";
                     if (!empty($seksi_filter)) { $sql .= " AND pi.seksi = :seksi"; }
+                    if (!empty($search_nama)) { $sql .= " AND pid.nama_barang LIKE :search"; }
                     $sql .= " ORDER BY pi.id DESC";
                     $stmt = $pdo->prepare($sql);
                     if (!empty($seksi_filter)) $stmt->bindParam(':seksi', $seksi_filter);
+                    if (!empty($search_nama)) {
+                        $search_param = "%{$search_nama}%";
+                        $stmt->bindParam(':search', $search_param);
+                    }
                 } else {
                     $sql = "SELECT * FROM laporan_umum WHERE tanggal_upload BETWEEN :mulai AND :sampai";
                     if (!empty($seksi_filter)) { $sql .= " AND seksi = :seksi"; }
+                    if (!empty($search_nama)) { $sql .= " AND judul_laporan LIKE :search"; }
                     $sql .= " ORDER BY tahun DESC, bulan DESC, id DESC";
                     $stmt = $pdo->prepare($sql);
                     $stmt->bindParam(':mulai', $mulai_tanggal);
                     $stmt->bindParam(':sampai', $sampai_tanggal);
                     if (!empty($seksi_filter)) $stmt->bindParam(':seksi', $seksi_filter);
+                    if (!empty($search_nama)) {
+                        $search_param = "%{$search_nama}%";
+                        $stmt->bindParam(':search', $search_param);
+                    }
                 }
                 $stmt->execute();
                 $data_arsip = $stmt->fetchAll();
@@ -137,13 +158,13 @@ include 'layouts/navbar.php';
                         <td style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05);"><?= $no++ ?></td>
                         <?php if ($tab_aktif == 'inventaris'): ?>
                             <td style="font-weight: bold; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                <?= htmlspecialchars($row['nama_barang'] ?? $row['barang'] ?? '-') ?>
+                                <?= htmlspecialchars($row['nama_barang'] ?? '-') ?>
                             </td>
                             <td style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                <?= htmlspecialchars($row['jumlah'] ?? $row['qty'] ?? '0') ?> Unit
+                                <?= htmlspecialchars($row['jumlah'] ?? '0') ?> Unit
                             </td>
                             <td style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                <?= htmlspecialchars($row['ruangan'] ?? $row['keterangan'] ?? $row['lokasi'] ?? '-') ?>
+                                <?= htmlspecialchars($row['ruangan'] ?? $row['keterangan'] ?? '-') ?>
                             </td>
                             <td style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05);">
                                 <?php 

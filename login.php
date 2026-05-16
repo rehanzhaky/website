@@ -10,7 +10,7 @@ if (isset($_SESSION['user_id']) || isset($_SESSION['role'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | SITAU - Sistem Tata Usaha</title>
+    <title>Login | SITUAN PADUKA - Sistem Informasi Penatausahaan Terpadu Kanim Tanjungpinang</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -27,10 +27,10 @@ if (isset($_SESSION['user_id']) || isset($_SESSION['role'])) {
     <div class="login-box">
         <div class="login-header-wrapper">
             <img src="assets/image/logo.png" alt="Logo Imigrasi" class="login-logo-img">
-            <div class="login-logo-text">SITAU</div>
+            <div class="login-logo-text">SITUAN PADUKA</div>
         </div>
 
-        <div class="login-subtitle">Sistem Tata Usaha Terpadu</div>
+        <div class="login-subtitle">Sistem Informasi Penatausahaan Terpadu Kanim Tanjungpinang</div>
         <?php if (isset($_SESSION['error'])): ?>
             <div class="alert-error">
                 <span style="font-size: 16px;">⚠️</span>
