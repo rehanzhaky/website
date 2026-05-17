@@ -73,7 +73,14 @@ $akun_pnbp = [
             </div>
             <div style="flex: 2;">
                 <label style="display:block; font-size:13px; margin-bottom:8px; color: var(--text-secondary); font-weight: 600; text-transform: lowercase;">keterangan / periode laporan</label>
-                <input type="text" name="keterangan" class="input-full-width" placeholder="contoh: realisasi pnbp s.d. mei 2026" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 12px 15px; border-radius: 10px;" required>
+                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+                    <input type="month" id="pilih_periode_pnbp" style="flex: 1; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 12px 15px; border-radius: 10px;">
+                    <button type="button" onclick="generateKeteranganPNBP()" style="padding: 12px 20px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 10px; cursor: pointer; font-weight: bold; white-space: nowrap; font-size: 13px; text-transform: lowercase;">
+                        📅 generate
+                    </button>
+                </div>
+                <input type="text" name="keterangan" id="input_keterangan_pnbp" class="input-full-width" placeholder="contoh: realisasi pnbp s.d. mei 2026" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 12px 15px; border-radius: 10px;" required>
+                <small style="display:block; margin-top:6px; color: var(--text-muted); font-size: 12px; text-transform: lowercase;">💡 pilih bulan dan tahun, lalu klik generate. atau ketik manual.</small>
             </div>
         </div>
 
@@ -127,6 +134,19 @@ $akun_pnbp = [
 </div>
 
 <script>
+function generateKeteranganPNBP() {
+    const pilih = document.getElementById('pilih_periode_pnbp').value;
+    if (!pilih) {
+        alert('Silakan pilih bulan dan tahun terlebih dahulu! 📅');
+        return;
+    }
+    const [tahun, bulan] = pilih.split('-');
+    const namaBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                       'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    const bulanStr = namaBulan[parseInt(bulan) - 1];
+    document.getElementById('input_keterangan_pnbp').value = `Realisasi PNBP s.d. ${bulanStr} ${tahun}`;
+}
+
 function formatRupiah(angka) {
     let angkaInt = parseInt(angka, 10);
     if (isNaN(angkaInt)) angkaInt = 0;
