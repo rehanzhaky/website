@@ -54,11 +54,11 @@ include 'layouts/navbar.php';
 <div class="dashboard-header cetak-sembunyi" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
     <div>
         <h2>Detail Realisasi Bidang 🏛️</h2>
-        <p style="color: rgba(255,255,255,0.7);"><?= htmlspecialchars($laporan['keterangan']) ?></p>
+        <p style="color: var(--text-secondary);"><?= htmlspecialchars($laporan['keterangan']) ?></p>
     </div>
     
     <div style="display: flex; gap: 12px;">
-        <a href="realisasi_anggaran.php" style="padding: 10px 20px; background: rgba(255,255,255,0.05); color: #ffffff; border: 1px solid rgba(255,255,255,0.2); text-decoration: none; border-radius: 30px; font-size: 13px; font-weight: bold; transition: 0.3s;">
+        <a href="realisasi_anggaran.php" style="padding: 10px 20px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); text-decoration: none; border-radius: 30px; font-size: 13px; font-weight: bold; transition: 0.3s;">
             ⬅️ kembali
         </a>
         <a href="ekspor_detail_realisasi_excel.php?id=<?= $id_laporan ?>" style="padding: 10px 20px; background: rgba(40, 167, 69, 0.9); color: #ffffff; text-decoration: none; border-radius: 30px; font-size: 13px; font-weight: bold; transition: 0.3s;">
@@ -70,9 +70,9 @@ include 'layouts/navbar.php';
     </div>
 </div>
 
-<div class="glass panel-utama panel-cetak" style="padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+<div class="glass panel-utama panel-cetak" style="padding: 30px; border-radius: 12px; border: 1px solid var(--border-color);">
     
-    <div class="kop-laporan" style="margin-bottom: 25px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; color: #fff;">
+    <div class="kop-laporan" style="margin-bottom: 25px; font-size: 14px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; color: var(--text-primary);">
         <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
             <div style="line-height: 1.6;">
                 <strong class="text-label">Kementerian/Lembaga:</strong> 137 - KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN<br>
@@ -87,7 +87,7 @@ include 'layouts/navbar.php';
     </div>
 
     <div style="overflow-x: auto;">
-        <table class="tabel-cetak" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; color: #ffffff;">
+        <table class="tabel-cetak" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; color: var(--text-primary);">
             <thead>
                 <tr class="baris-header">
                     <th class="sel-tabel" rowspan="2" style="text-align: center; width: 35%;">Realisasi Per Bidang</th>
@@ -112,7 +112,7 @@ include 'layouts/navbar.php';
                 <?php foreach ($details as $row): 
                     $persen = $row['pagu'] > 0 ? number_format(($row['realisasi'] / $row['pagu']) * 100, 2) : 0;
                 ?>
-                    <tr class="baris-data" style="transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+                    <tr class="baris-data" style="transition: all 0.2s;" onmouseover="this.style.background='var(--blue-lighter)'" onmouseout="this.style.background='transparent'">
                         <td class="sel-tabel" style="padding: 15px 12px;">
                             <strong class="kode-komponen"><?= htmlspecialchars($row['kode_komponen']) ?></strong> 
                             <span style="opacity: 0.9;"><?= htmlspecialchars($row['judul_komponen']) ?></span>
@@ -131,31 +131,31 @@ include 'layouts/navbar.php';
 <style>
 /* STYLE DEFAULT (TAMPILAN BROWSER - GLASSMORPHISM KALEM) */
 .sel-tabel {
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid var(--border-color);
     padding: 12px;
 }
 .baris-header {
-    background: rgba(255, 255, 255, 0.05); /* Putih transparan */
-    color: rgba(255,255,255,0.9);
+    background: var(--bg-secondary); /* Putih transparan */
+    color: var(--text-primary);
 }
 .baris-total {
-    background: rgba(255, 255, 255, 0.1); /* Putih transparan agak tebal */
-    color: #ffffff;
+    background: var(--blue-lighter); /* Putih transparan agak tebal */
+    color: var(--text-primary);
 }
 .angka-total {
     font-weight: bold;
     font-size: 14px;
 }
 .text-label {
-    color: rgba(255,255,255,0.6); /* Abu-abu kalem buat label */
+    color: var(--text-secondary); /* Abu-abu kalem buat label */
     font-weight: normal;
 }
 .kode-komponen {
-    color: #ffffff;
+    color: var(--text-primary);
     font-weight: bold;
 }
 .text-sisa {
-    color: #ffffff; 
+    color: var(--text-primary); 
 }
 
 /* STYLE KETIKA DI-PRINT (TAMPILAN KERTAS PUTIH) */

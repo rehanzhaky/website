@@ -20,12 +20,12 @@ include 'layouts/navbar.php';
 
 <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px;">
     <div style="display: flex; align-items: center; gap: 15px;">
-        <a href="pilih_laporan.php" style="padding: 10px 18px; background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; border-radius: 10px; font-size: 13px; font-weight: bold; border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;">
+        <a href="pilih_laporan.php" style="padding: 10px 18px; background: var(--bg-secondary); color: var(--text-primary); text-decoration: none; border-radius: 10px; font-size: 13px; font-weight: bold; border: 1px solid var(--border-color); transition: all 0.3s;">
             ← kembali
         </a>
         <div>
             <h2>Daftar Laporan PNBP 💰</h2>
-            <p style="color: rgba(255,255,255,0.7);">Manajemen pemantauan Penerimaan Negara Bukan Pajak.</p>
+            <p style="color: var(--text-secondary);">Manajemen pemantauan Penerimaan Negara Bukan Pajak.</p>
         </div>
     </div>
     
@@ -43,12 +43,12 @@ include 'layouts/navbar.php';
     <form method="GET" action="" style="margin-bottom: 35px;">
         <div style="display: flex; align-items: flex-end; gap: 15px;">
             <div style="flex: 1;">
-                <label style="display:block; font-size:13px; margin-bottom:8px; color: rgba(255,255,255,0.7);">tanggal mulai</label>
-                <input type="date" name="mulai_tanggal" class="input-full-width" value="<?= $mulai_tanggal ?>" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px; border-radius: 10px;">
+                <label style="display:block; font-size:13px; margin-bottom:8px; color: var(--text-secondary);">tanggal mulai</label>
+                <input type="date" name="mulai_tanggal" class="input-full-width" value="<?= $mulai_tanggal ?>" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 12px; border-radius: 10px;">
             </div>
             <div style="flex: 1;">
-                <label style="display:block; font-size:13px; margin-bottom:8px; color: rgba(255,255,255,0.7);">tanggal akhir</label>
-                <input type="date" name="sampai_tanggal" class="input-full-width" value="<?= $sampai_tanggal ?>" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px; border-radius: 10px;">
+                <label style="display:block; font-size:13px; margin-bottom:8px; color: var(--text-secondary);">tanggal akhir</label>
+                <input type="date" name="sampai_tanggal" class="input-full-width" value="<?= $sampai_tanggal ?>" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 12px; border-radius: 10px;">
             </div>
             <div>
                 <button type="submit" style="padding: 13px 25px; background: #ffffff; color: #0a1128; border: none; border-radius: 30px; font-weight: bold; cursor: pointer;">
@@ -61,13 +61,13 @@ include 'layouts/navbar.php';
     <div class="panel-tabel">
         <table class="table-minimal" style="width: 100%; border-collapse: collapse;">
             <thead>
-                <tr style="border-bottom: 2px solid rgba(255,255,255,0.1);">
-                    <th style="width: 5%; text-align: center; padding: 15px; color: rgba(255,255,255,0.7);">NO.</th>
-                    <th style="width: 15%; padding: 15px; color: rgba(255,255,255,0.7);">TGL. LAPORAN</th>
-                    <th style="width: 30%; padding: 15px; color: rgba(255,255,255,0.7);">KETERANGAN</th>
-                    <th style="width: 15%; text-align: right; padding: 15px; color: rgba(255,255,255,0.7);">TOTAL TARGET</th>
-                    <th style="width: 15%; text-align: right; padding: 15px; color: rgba(255,255,255,0.7);">TOTAL REALISASI</th>
-                    <th style="width: 20%; text-align: center; padding: 15px; color: rgba(255,255,255,0.7);">AKSI</th>
+                <tr style="border-bottom: 2px solid var(--border-color);">
+                    <th style="width: 5%; text-align: center; padding: 15px; color: var(--text-muted);">NO.</th>
+                    <th style="width: 15%; padding: 15px; color: var(--text-muted);">TGL. LAPORAN</th>
+                    <th style="width: 30%; padding: 15px; color: var(--text-muted);">KETERANGAN</th>
+                    <th style="width: 15%; text-align: right; padding: 15px; color: var(--text-muted);">TOTAL TARGET</th>
+                    <th style="width: 15%; text-align: right; padding: 15px; color: var(--text-muted);">TOTAL REALISASI</th>
+                    <th style="width: 20%; text-align: center; padding: 15px; color: var(--text-muted);">AKSI</th>
                 </tr>
             </thead>
             <tbody>
@@ -95,18 +95,18 @@ include 'layouts/navbar.php';
 
                 if (!$data): 
                 ?>
-                    <tr><td colspan="6" style="text-align: center; padding: 50px; opacity: 0.5; color: #fff;">Belum ada laporan PNBP...</td></tr>
+                    <tr><td colspan="6" style="text-align: center; padding: 50px; color: var(--text-muted);">Belum ada laporan PNBP...</td></tr>
                 <?php 
                 else: 
                     $no = 1;
                     foreach ($data as $row):
                 ?>
-                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <td style="text-align: center; padding: 15px; color: #fff;"><?= $no++ ?></td>
-                        <td style="padding: 15px; color: #fff;"><?= date('d/m/Y', strtotime($row['tanggal_laporan'])) ?></td>
-                        <td style="padding: 15px; font-weight: bold; color: #fff;"><?= htmlspecialchars($row['keterangan']) ?></td>
-                        <td style="text-align: right; padding: 15px; color: rgba(255,255,255,0.7);">Rp <?= number_format($row['grand_target'] ?: 0, 0, ',', '.') ?></td>
-                        <td style="text-align: right; padding: 15px; color: #64ffda; font-weight: bold;">Rp <?= number_format($row['grand_realisasi'] ?: 0, 0, ',', '.') ?></td>
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <td style="text-align: center; padding: 15px; color: var(--text-primary);"><?= $no++ ?></td>
+                        <td style="padding: 15px; color: var(--text-primary);"><?= date('d/m/Y', strtotime($row['tanggal_laporan'])) ?></td>
+                        <td style="padding: 15px; font-weight: bold; color: var(--text-primary);"><?= htmlspecialchars($row['keterangan']) ?></td>
+                        <td style="text-align: right; padding: 15px; color: var(--text-secondary);">Rp <?= number_format($row['grand_target'] ?: 0, 0, ',', '.') ?></td>
+                        <td style="text-align: right; padding: 15px; color: #10b981; font-weight: bold;">Rp <?= number_format($row['grand_realisasi'] ?: 0, 0, ',', '.') ?></td>
                         <td style="padding: 15px; text-align: center;">
                             <a href="detail_pnbp.php?id=<?= $row['id'] ?>" class="btn-navy-pill" style="padding: 6px 15px; font-size: 11px; text-decoration: none;">👁️ detail</a>
                             <?php if ($bisa_edit): ?>

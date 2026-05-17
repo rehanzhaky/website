@@ -28,7 +28,7 @@ include 'layouts/navbar.php';
 <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px;">
     <div>
         <h2>Agenda Kegiatan Kakanim 📅</h2>
-        <p style="color: rgba(255,255,255,0.7);">Pantau jadwal kegiatan, rapat, dan dokumentasi Kantor Imigrasi di sini.</p>
+        <p style="color: var(--text-secondary);">Pantau jadwal kegiatan, rapat, dan dokumentasi Kantor Imigrasi di sini.</p>
     </div>
     
     <?php if ($bisa_edit): ?>
@@ -43,7 +43,7 @@ include 'layouts/navbar.php';
     <form method="GET" action="" style="margin-bottom: 35px;">
         <div style="display: flex; align-items: center; gap: 15px;">
             <div style="flex: 1;">
-                <input type="text" name="cari" class="input-full-width" value="<?= htmlspecialchars($search) ?>" placeholder="Cari nama kegiatan atau lokasi..." style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 13px 20px; border-radius: 30px; box-sizing: border-box;">
+                <input type="text" name="cari" class="input-full-width" value="<?= htmlspecialchars($search) ?>" placeholder="Cari nama kegiatan atau lokasi..." style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 13px 20px; border-radius: 30px; box-sizing: border-box;">
             </div>
             <div>
                 <button type="submit" style="padding: 13px 30px; background: #ffffff; color: #0a1128; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; text-transform: lowercase; font-size: 13px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
@@ -56,13 +56,13 @@ include 'layouts/navbar.php';
     <div class="panel-tabel" style="overflow-x: auto;">
         <table class="table-minimal" style="width: 100%; border-collapse: collapse; text-align: left;">
             <thead>
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.2);">
-                    <th style="padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 15%;">TANGGAL</th>
-                    <th style="padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 20%;">NAMA KEGIATAN</th>
-                    <th style="padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 10%;">JENIS</th>
-                    <th style="padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 15%;">LOKASI</th>
-                    <th style="padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 20%;">KETERANGAN</th>
-                    <th style="text-align: center; padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 10%;">DOKUMENTASI</th>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <th style="padding: 15px; color: var(--text-muted); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 15%;">TANGGAL</th>
+                    <th style="padding: 15px; color: var(--text-muted); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 20%;">NAMA KEGIATAN</th>
+                    <th style="padding: 15px; color: var(--text-muted); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 10%;">JENIS</th>
+                    <th style="padding: 15px; color: var(--text-muted); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 15%;">LOKASI</th>
+                    <th style="padding: 15px; color: var(--text-muted); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 20%;">KETERANGAN</th>
+                    <th style="text-align: center; padding: 15px; color: var(--text-muted); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 10%;">DOKUMENTASI</th>
                     
                     <?php if ($bisa_edit): ?>
                         <th style="text-align: center; padding: 15px; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; width: 10%;">AKSI</th>
@@ -72,11 +72,11 @@ include 'layouts/navbar.php';
             <tbody>
                 <?php if(count($data_agenda) > 0): ?>
                     <?php foreach($data_agenda as $row): ?>
-                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
-                        <td style="padding: 15px; color: #ffffff; white-space: nowrap;">
+                    <tr style="border-bottom: 1px solid var(--border-color); transition: all 0.2s;" onmouseover="this.style.background='var(--blue-lighter)'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 15px; color: var(--text-primary); white-space: nowrap;">
                             <strong><?= date('d M Y', strtotime($row['tanggal'])) ?></strong>
                         </td>
-                        <td style="padding: 15px; color: #ffffff; font-weight: 500;">
+                        <td style="padding: 15px; color: var(--text-primary); font-weight: 500;">
                             <?= htmlspecialchars($row['nama_kegiatan']) ?>
                         </td>
                         <td style="padding: 15px;">
@@ -91,10 +91,10 @@ include 'layouts/navbar.php';
                             }
                             ?>
                         </td>
-                        <td style="padding: 15px; color: rgba(255,255,255,0.8);">
+                        <td style="padding: 15px; color: var(--text-secondary);">
                             📍 <?= htmlspecialchars($row['lokasi']) ?>
                         </td>
-                        <td style="padding: 15px; color: rgba(255,255,255,0.7); font-size: 13px;">
+                        <td style="padding: 15px; color: var(--text-secondary); font-size: 13px;">
                             <?= htmlspecialchars($row['keterangan']) ?>
                         </td>
                         <td style="text-align: center; padding: 15px;">
