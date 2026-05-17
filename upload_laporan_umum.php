@@ -51,7 +51,7 @@ include 'layouts/navbar.php';
         <div class="form-grid">
             <div class="form-group">
                 <label>Seksi</label>
-                <input type="text" name="seksi" value="<?= $nama_seksi ?>" readonly style="background: rgba(255,255,255,0.05); color: #64ffda; font-weight: bold;">
+                <input type="text" name="seksi" value="<?= $nama_seksi ?>" readonly style="background: var(--bg-secondary); color: #072749; font-weight: bold;">
             </div>
 
             <div class="form-group">
@@ -61,7 +61,7 @@ include 'layouts/navbar.php';
 
             <div class="form-group">
                 <label>Periode Bulan</label>
-                <select name="bulan" required style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                <select name="bulan" required style="width: 100%; padding: 10px; border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color);">
                     <?php
                     $list_bulan = [1=>'Januari', 2=>'Februari', 3=>'Maret', 4=>'April', 5=>'Mei', 6=>'Juni', 7=>'Juli', 8=>'Agustus', 9=>'September', 10=>'Oktober', 11=>'November', 12=>'Desember'];
                     foreach ($list_bulan as $num => $nama):
@@ -74,7 +74,7 @@ include 'layouts/navbar.php';
 
             <div class="form-group">
                 <label>Tahun</label>
-                <select name="tahun" required style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                <select name="tahun" required style="width: 100%; padding: 10px; border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color);">
                     <option value="<?= date('Y') ?>" style="color:black;"><?= date('Y') ?></option>
                     <option value="<?= date('Y')-1 ?>" style="color:black;"><?= date('Y')-1 ?></option>
                 </select>
@@ -82,17 +82,17 @@ include 'layouts/navbar.php';
 
             <div class="form-group form-full">
                 <label>File Dokumen</label>
-                <input type="file" name="file_laporan" required style="padding: 8px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.3); width: 100%; border-radius: 8px; color:white;">
+                <input type="file" name="file_laporan" required style="padding: 8px; background: var(--bg-secondary); border: 1px dashed var(--border-color); width: 100%; border-radius: 8px; color: var(--text-primary);">
             </div>
 
             <div class="form-group form-full">
                 <label>Keterangan Tambahan</label>
-                <textarea name="keterangan" rows="3" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;"></textarea>
+                <textarea name="keterangan" rows="3" style="width: 100%; padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary);"></textarea></textarea>
             </div>
         </div>
 
         <div style="text-align: right; margin-top: 20px;">
-            <a href="laporan_umum.php" style="color: rgba(255,255,255,0.6); text-decoration: none; margin-right: 20px;">Batal</a>
+            <a href="laporan_umum.php" style="color: var(--text-secondary); text-decoration: none; margin-right: 20px;">Batal</a>
             <button type="submit" class="btn-navy-pill" style="background: rgba(255, 215, 0, 0.2); border-color: #ffd700; color: #ffd700;">💾 Simpan & Upload</button>
         </div>
     </form>
