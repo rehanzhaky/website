@@ -45,7 +45,7 @@ $laporan_bulan_ini = $stmt_check->fetch();
         <span style="font-size: 24px;">⚠️</span>
         <div>
             <strong style="color: #ff4c4c; display: block; font-size: 15px; margin-bottom: 3px;">Perhatian!</strong>
-            <span style="font-size: 13px; color: rgba(255,255,255,0.8);">Seksi <?= htmlspecialchars($nama_seksi) ?> <strong>belum mengunggah</strong> E-Performance untuk periode <?= $list_bulan[$bulan_sekarang] ?> <?= $tahun_sekarang ?>.</span>
+            <span style="font-size: 13px; color: var(--text-secondary);">Seksi <?= htmlspecialchars($nama_seksi) ?> <strong>belum mengunggah</strong> E-Performance untuk periode <?= $list_bulan[$bulan_sekarang] ?> <?= $tahun_sekarang ?>.</span>
         </div>
     </div>
 <?php else: ?>
@@ -53,7 +53,7 @@ $laporan_bulan_ini = $stmt_check->fetch();
         <span style="font-size: 24px;">✅</span>
         <div>
             <strong style="color: #64ffda; display: block; font-size: 15px; margin-bottom: 3px;">Aman!</strong>
-            <span style="font-size: 13px; color: rgba(255,255,255,0.8);">E-Performance periode <?= $list_bulan[$bulan_sekarang] ?> <?= $tahun_sekarang ?> sudah diunggah. Tetap pertahankan kedisiplinannya, cuy!</span>
+            <span style="font-size: 13px; color: var(--text-secondary);">E-Performance periode <?= $list_bulan[$bulan_sekarang] ?> <?= $tahun_sekarang ?> sudah diunggah. Tetap pertahankan kedisiplinannya, cuy!</span>
         </div>
     </div>
 <?php endif; ?>
@@ -61,7 +61,7 @@ $laporan_bulan_ini = $stmt_check->fetch();
 <div class="glass panel-utama" style="padding: 30px;">
     <div class="panel-tabel">
         <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
-            <h4 style="margin: 0; color: var(--text-white);">Riwayat Laporan Kinerja</h4>
+            <h4 style="margin: 0; color: var(--text-primary);">Riwayat Laporan Kinerja</h4>
             <a href="upload_eperformance.php?seksi=<?= htmlspecialchars($slug_seksi) ?>" class="btn-navy-pill" style="margin: 0; background: rgba(255, 215, 0, 0.2); border-color: #ffd700; color: #ffd700; padding: 6px 15px; font-size: 12px;">
                 + Upload Baru
             </a>
@@ -101,25 +101,25 @@ $laporan_bulan_ini = $stmt_check->fetch();
                     foreach ($data_laporan as $row):
                 ?>
                     <tr>
-                        <td style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);"><?= $no++ ?></td>
+                        <td style="text-align: center; border-bottom: 1px solid var(--border-color);"><?= $no++ ?></td>
                         
-                        <td style="border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #64ffda;">
+                        <td style="border-bottom: 1px solid var(--border-color); font-weight: bold; color: #072749;">
                             <?= $list_bulan[$row['bulan']] ?> <?= $row['tahun'] ?>
                         </td>
                         
-                        <td style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <td style="border-bottom: 1px solid var(--border-color);">
                             <?= htmlspecialchars($row['judul_laporan']) ?>
                         </td>
                         
-                        <td style="border-bottom: 1px solid rgba(255,255,255,0.1); opacity: 0.8; font-size: 12px;">
+                        <td style="border-bottom: 1px solid var(--border-color); color: var(--text-secondary); font-size: 12px;">
                             <?= empty($row['keterangan']) ? '-' : htmlspecialchars($row['keterangan']) ?>
                         </td>
 
-                        <td style="border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 12px;">
-                            <?= date('d M Y', strtotime($row['tanggal_upload'])) ?>
+                        <td style="border-bottom: 1px solid var(--border-color); font-size: 12px;">
+                            <?= date('d/m/Y', strtotime($row['tanggal_upload'])) ?>
                         </td>
                         
-                        <td style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <td style="text-align: center; border-bottom: 1px solid var(--border-color);">
                             <a href="uploads/eperformance/<?= htmlspecialchars($row['nama_file']) ?>" target="_blank" class="btn-navy-pill" style="padding: 6px 15px; font-size: 11px; margin: 0;">
                                 📥 Buka File
                             </a>
