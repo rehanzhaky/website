@@ -60,67 +60,67 @@ $akun_pnbp = [
 
 <div class="dashboard-header">
     <h2>Tambah Laporan PNBP 💰</h2>
-    <p style="color: rgba(255,255,255,0.7);">Input estimasi dan realisasi Penerimaan Negara Bukan Pajak.</p>
+    <p style="color: var(--text-secondary);">Input estimasi dan realisasi Penerimaan Negara Bukan Pajak.</p>
 </div>
 
-<div class="glass panel-utama" style="padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+<div class="glass panel-utama" style="padding: 30px; border-radius: 12px; border: 1px solid var(--border-color);">
     
     <form action="" method="POST" id="formPNBP">
         <div style="display: flex; gap: 20px; margin-bottom: 30px;">
             <div style="flex: 1;">
-                <label style="display:block; font-size:13px; margin-bottom:8px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: lowercase;">tanggal laporan</label>
-                <input type="date" name="tanggal_laporan" class="input-full-width" value="<?= date('Y-m-d') ?>" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 15px; border-radius: 10px;" required>
+                <label style="display:block; font-size:13px; margin-bottom:8px; color: var(--text-secondary); font-weight: 600; text-transform: lowercase;">tanggal laporan</label>
+                <input type="date" name="tanggal_laporan" class="input-full-width" value="<?= date('Y-m-d') ?>" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 12px 15px; border-radius: 10px;" required>
             </div>
             <div style="flex: 2;">
-                <label style="display:block; font-size:13px; margin-bottom:8px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: lowercase;">keterangan / periode laporan</label>
-                <input type="text" name="keterangan" class="input-full-width" placeholder="contoh: realisasi pnbp s.d. mei 2026" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 15px; border-radius: 10px;" required>
+                <label style="display:block; font-size:13px; margin-bottom:8px; color: var(--text-secondary); font-weight: 600; text-transform: lowercase;">keterangan / periode laporan</label>
+                <input type="text" name="keterangan" class="input-full-width" placeholder="contoh: realisasi pnbp s.d. mei 2026" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 12px 15px; border-radius: 10px;" required>
             </div>
         </div>
 
         <div style="overflow-x: auto;">
             <table style="width: 100%; border-collapse: collapse; text-align: left;">
                 <thead>
-                    <tr style="border-bottom: 2px solid rgba(255,255,255,0.1);">
-                        <th style="padding: 15px 10px; color: rgba(255,255,255,0.9); width: 40%; font-size: 13px; text-transform: lowercase; opacity: 0.7;">uraian (jenis akun)</th>
-                        <th style="padding: 15px 10px; color: rgba(255,255,255,0.9); width: 20%; font-size: 13px; text-transform: lowercase; opacity: 0.7;">estimasi (rp)</th>
-                        <th style="padding: 15px 10px; color: rgba(255,255,255,0.9); width: 20%; font-size: 13px; text-transform: lowercase; opacity: 0.7;">realisasi (rp)</th>
-                        <th style="padding: 15px 10px; color: rgba(255,255,255,0.9); width: 20%; font-size: 13px; text-transform: lowercase; opacity: 0.7;">persentase (%)</th>
+                    <tr style="border-bottom: 2px solid var(--border-color);">
+                        <th style="padding: 15px 10px; color: var(--text-muted); width: 40%; font-size: 13px; text-transform: lowercase;">uraian (jenis akun)</th>
+                        <th style="padding: 15px 10px; color: var(--text-muted); width: 20%; font-size: 13px; text-transform: lowercase;">estimasi (rp)</th>
+                        <th style="padding: 15px 10px; color: var(--text-muted); width: 20%; font-size: 13px; text-transform: lowercase;">realisasi (rp)</th>
+                        <th style="padding: 15px 10px; color: var(--text-muted); width: 20%; font-size: 13px; text-transform: lowercase;">persentase (%)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($akun_pnbp as $akun): ?>
-                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <tr style="border-bottom: 1px solid var(--border-color);">
                             <td style="padding: 15px 10px;">
                                 <input type="hidden" name="kode_akun[]" value="<?= $akun['kode'] ?>">
                                 <input type="hidden" name="nama_akun[]" value="<?= htmlspecialchars($akun['nama']) ?>">
-                                <strong style="color: #ffffff;"><?= $akun['kode'] ?></strong><br>
-                                <span style="font-size: 12px; color: rgba(255,255,255,0.6);"><?= htmlspecialchars($akun['nama']) ?></span>
+                                <strong style="color: var(--text-primary);"><?= $akun['kode'] ?></strong><br>
+                                <span style="font-size: 12px; color: var(--text-secondary);"><?= htmlspecialchars($akun['nama']) ?></span>
                             </td>
                             <td style="padding: 10px;">
-                                <input type="text" name="estimasi[]" class="input-full-width inp-est" value="0" onkeyup="hitungTotalPNBP()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-weight: bold; padding: 12px; border-radius: 8px;">
+                                <input type="text" name="estimasi[]" class="input-full-width inp-est" value="0" onkeyup="hitungTotalPNBP()" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); font-weight: bold; padding: 12px; border-radius: 8px;">
                             </td>
                             <td style="padding: 10px;">
-                                <input type="text" name="realisasi[]" class="input-full-width inp-real" value="0" onkeyup="hitungTotalPNBP()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-weight: bold; padding: 12px; border-radius: 8px;">
+                                <input type="text" name="realisasi[]" class="input-full-width inp-real" value="0" onkeyup="hitungTotalPNBP()" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); font-weight: bold; padding: 12px; border-radius: 8px;">
                             </td>
                             <td style="padding: 10px;">
-                                <input type="text" name="persentase[]" class="input-full-width inp-persen" value="0,00%" onkeyup="hitungTotalPNBP()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-weight: bold; padding: 12px; border-radius: 8px; text-align: center;">
+                                <input type="text" name="persentase[]" class="input-full-width inp-persen" value="0,00%" onkeyup="hitungTotalPNBP()" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); font-weight: bold; padding: 12px; border-radius: 8px; text-align: center;">
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
                 <tfoot>
-                    <tr style="background: rgba(255, 255, 255, 0.05);">
-                        <td style="padding: 15px 10px; font-weight: 900; color: #ffffff; text-align: right; letter-spacing: 1px; text-transform: lowercase;">grand total :</td>
-                        <td style="padding: 10px;"><input type="text" id="grand_est" value="0" readonly style="width: 100%; background: transparent; color: #ffffff; font-weight: bold; font-size: 15px; border:none; padding: 10px;"></td>
-                        <td style="padding: 10px;"><input type="text" id="grand_realisasi" value="0" readonly style="width: 100%; background: transparent; color: #ffffff; font-weight: bold; font-size: 15px; border:none; padding: 10px;"></td>
-                        <td style="padding: 10px;"><input type="text" id="grand_persen" value="0,00%" readonly style="width: 100%; background: transparent; color: #ffffff; font-weight: bold; font-size: 15px; border:none; padding: 10px; text-align: center;"></td>
+                    <tr style="background: var(--bg-secondary);">
+                        <td style="padding: 15px 10px; font-weight: 900; color: var(--text-primary); text-align: right; letter-spacing: 1px; text-transform: lowercase;">grand total :</td>
+                        <td style="padding: 10px;"><input type="text" id="grand_est" value="0" readonly style="width: 100%; background: transparent; color: var(--text-primary); font-weight: bold; font-size: 15px; border:none; padding: 10px;"></td>
+                        <td style="padding: 10px;"><input type="text" id="grand_realisasi" value="0" readonly style="width: 100%; background: transparent; color: var(--text-primary); font-weight: bold; font-size: 15px; border:none; padding: 10px;"></td>
+                        <td style="padding: 10px;"><input type="text" id="grand_persen" value="0,00%" readonly style="width: 100%; background: transparent; color: var(--text-primary); font-weight: bold; font-size: 15px; border:none; padding: 10px; text-align: center;"></td>
                     </tr>
                 </tfoot>
             </table>
         </div>
 
         <div style="margin-top: 35px; text-align: right;">
-            <a href="laporan_pnbp.php" style="text-decoration: none; padding: 12px 25px; border-radius: 30px; margin-right: 12px; color: #ffffff; border: 1px solid rgba(255,255,255,0.3); font-size: 13px; font-weight: bold;">batal</a>
+            <a href="laporan_pnbp.php" style="text-decoration: none; padding: 12px 25px; border-radius: 30px; margin-right: 12px; color: var(--text-primary); border: 1px solid var(--border-color); font-size: 13px; font-weight: bold;">batal</a>
             <button type="submit" style="padding: 12px 30px; border-radius: 30px; border: none; cursor: pointer; font-weight: bold; background: #ffffff; color: #0a1128; font-size: 13px; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">💾 simpan laporan</button>
         </div>
     </form>
