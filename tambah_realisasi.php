@@ -67,7 +67,7 @@ include 'layouts/navbar.php';
             
             <div class="form-group">
                 <label style="display: block; margin-bottom: 8px;">Pilih Seksi / Bidang</label>
-                <select name="seksi" id="seksi_dropdown" style="width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.2); border: 1px solid rgba(100,255,218,0.5); color: #fff; padding: 12px; border-radius: 5px; font-size: 14px;" onchange="generateTabel()" required>
+                <select name="seksi" id="seksi_dropdown" style="width: 100%; box-sizing: border-box; background: rgba(10,25,47,0.05); border: 1px solid rgba(10,25,47,0.3); color: #0a192f; padding: 12px; border-radius: 5px; font-size: 14px;" onchange="generateTabel()" required>
                     <option value="">-- Pilih Seksi --</option>
                     <option value="LANTASKIM">LANTASKIM</option>
                     <option value="INTALTUSKIM">INTALTUSKIM</option>
@@ -86,26 +86,26 @@ include 'layouts/navbar.php';
             <div class="form-group">
                 <label style="display: block; margin-bottom: 8px;">Keterangan / Periode</label>
                 <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
-                    <input type="month" id="pilih_periode" style="flex: 1; background: rgba(0,0,0,0.2); border: 1px solid rgba(100,255,218,0.5); color: #fff; padding: 12px; border-radius: 5px; font-size: 14px;">
-                    <button type="button" onclick="generateKeterangan()" style="padding: 12px 20px; background: rgba(100,255,218,0.2); color: #64ffda; border: 1px solid rgba(100,255,218,0.5); border-radius: 5px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                    <input type="month" id="pilih_periode" style="flex: 1; background: rgba(10,25,47,0.05); border: 1px solid rgba(10,25,47,0.3); color: #0a192f; padding: 12px; border-radius: 5px; font-size: 14px;">
+                    <button type="button" onclick="generateKeterangan()" style="padding: 12px 20px; background: rgba(10,25,47,0.08); color: #0a192f; border: 1px solid rgba(10,25,47,0.3); border-radius: 5px; cursor: pointer; font-weight: bold; white-space: nowrap;">
                         📅 Generate
                     </button>
                 </div>
                 <input type="text" name="keterangan" id="input_keterangan" class="input-full-width" style="width: 100%; box-sizing: border-box;" placeholder="Contoh: Realisasi s.d. Mei 2026" required>
-                <small style="color: rgba(255,255,255,0.5); font-size: 12px;">💡 Pilih bulan dan tahun, lalu klik Generate. Atau ketik manual.</small>
+                <small style="color: rgba(10,25,47,0.7); font-size: 12px;">💡 Pilih bulan dan tahun, lalu klik Generate. Atau ketik manual.</small>
             </div>
         </div>
 
         <div id="area_tabel" style="display: none;">
-            <h3 style="border-bottom: 1px solid rgba(100, 255, 218, 0.3); padding-bottom: 10px; color: #64ffda; margin-bottom: 20px;">Rincian Komponen Anggaran</h3>
-            
+            <h3 style="border-bottom: 1px solid rgba(10, 25, 47, 0.2); padding-bottom: 10px; color: #0a192f; margin-bottom: 20px;">Rincian Komponen Anggaran</h3>
+
             <table class="table-minimal" style="width: 100%; text-align: left; border-collapse: collapse;">
                 <thead>
-                    <tr style="border-bottom: 2px solid rgba(100, 255, 218, 0.2);">
-                        <th style="padding: 10px; color: rgba(255,255,255,0.7); width: 35%;">Realisasi Per Bidang</th>
-                        <th style="padding: 10px; color: rgba(255,255,255,0.7); width: 20%;">Pagu (Rp)</th>
-                        <th style="padding: 10px; color: rgba(255,255,255,0.7); width: 20%;">Realisasi (Rp)</th>
-                        <th style="padding: 10px; color: rgba(255,255,255,0.7); width: 25%;">Sisa Anggaran (Rp)</th>
+                    <tr style="border-bottom: 2px solid rgba(10, 25, 47, 0.2);">
+                        <th style="padding: 10px; color: #0a192f; width: 35%;">Realisasi Per Bidang</th>
+                        <th style="padding: 10px; color: #0a192f; width: 20%;">Pagu (Rp)</th>
+                        <th style="padding: 10px; color: #0a192f; width: 20%;">Realisasi (Rp)</th>
+                        <th style="padding: 10px; color: #0a192f; width: 25%;">Sisa Anggaran (Rp)</th>
                     </tr>
                 </thead>
                 <tbody id="tbody_dinamis"></tbody>
@@ -117,7 +117,7 @@ include 'layouts/navbar.php';
             </div>
         </div>
 
-        <div id="pesan_kosong" style="text-align: center; padding: 50px; color: rgba(255,255,255,0.5);">
+        <div id="pesan_kosong" style="text-align: center; padding: 50px; color: rgba(10,25,47,0.7);">
             👆 Silakan pilih <strong>Seksi / Bidang</strong> untuk memunculkan tabel rincian.
         </div>
     </form>
@@ -195,16 +195,16 @@ function generateTabel() {
 
         list.forEach((item) => {
             tbody.innerHTML += `
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <tr style="border-bottom: 1px solid rgba(10,25,47,0.08);">
                     <td style="padding: 15px 10px;">
                         <input type="hidden" name="kode[]" value="${item.kode}">
                         <input type="hidden" name="judul[]" value="${item.judul}">
-                        <span style="color: #64ffda; font-weight: bold; font-family: monospace;">${item.kode}</span><br>
-                        <span style="font-size: 13px; color: #ccd6f6; opacity: 0.8;">${item.judul}</span>
+                        <span style="color: #0a192f; font-weight: bold; font-family: monospace;">${item.kode}</span><br>
+                        <span style="font-size: 13px; color: #0a192f; opacity: 0.8;">${item.judul}</span>
                     </td>
                     <td><input type="text" name="pagu[]" class="input-full-width inp-pagu" value="0" onkeyup="hitungTotal(this)"></td>
                     <td><input type="text" name="realisasi[]" class="input-full-width inp-real" value="0" onkeyup="hitungTotal(this)"></td>
-                    <td><input type="text" name="sisa[]" class="input-full-width" value="0" readonly style="background: rgba(255,255,255,0.05); border:none; color: #8892b0; cursor: not-allowed;"></td>
+                    <td><input type="text" name="sisa[]" class="input-full-width" value="0" readonly style="background: rgba(10,25,47,0.05); border:none; color: #0a192f; cursor: not-allowed;"></td>
                 </tr>`;
         });
     } else {

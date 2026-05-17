@@ -113,16 +113,16 @@ include 'layouts/navbar.php';
 
             <div class="form-group">
                 <label>📸 Upload File PNG <span style="color: #ff4c4c;">*</span></label>
-                <input type="file" name="dokumentasi_png" accept=".png" required 
-                       style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px; border-radius: 8px; box-sizing: border-box; width: 100%;">
-                <small style="color: rgba(255,255,255,0.5); font-size: 12px;">Format: PNG | Max: 5MB</small>
+                <input type="file" name="dokumentasi_png" accept=".png" required
+                       style="background: rgba(10,25,47,0.05); border: 1px solid rgba(10,25,47,0.2); color: #0a192f; padding: 12px; border-radius: 8px; box-sizing: border-box; width: 100%;">
+                <small style="color: rgba(10,25,47,0.7); font-size: 12px;">Format: PNG | Max: 5MB</small>
             </div>
 
             <div class="form-group">
                 <label>📄 Upload File PDF <span style="color: #ff4c4c;">*</span></label>
-                <input type="file" name="dokumentasi_pdf" accept=".pdf" required 
-                       style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px; border-radius: 8px; box-sizing: border-box; width: 100%;">
-                <small style="color: rgba(255,255,255,0.5); font-size: 12px;">Format: PDF | Max: 10MB</small>
+                <input type="file" name="dokumentasi_pdf" accept=".pdf" required
+                       style="background: rgba(10,25,47,0.05); border: 1px solid rgba(10,25,47,0.2); color: #0a192f; padding: 12px; border-radius: 8px; box-sizing: border-box; width: 100%;">
+                <small style="color: rgba(10,25,47,0.7); font-size: 12px;">Format: PDF | Max: 10MB</small>
             </div>
         </div>
 
