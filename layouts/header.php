@@ -32,6 +32,10 @@ function is_active($page_array, $current) {
             <a href="daftar_pengajuan.php" class="<?= is_active(['daftar_pengajuan.php', 'detail_pengajuan.php', 'buat_pengajuan.php', 'cetak.php'], $current_page) ?>">
                 Inventaris
             </a>
+
+            <a href="stok_persediaan.php" class="<?= is_active(['stok_persediaan.php', 'tambah_item_atk.php', 'tambah_stok_masuk.php'], $current_page) ?>">
+                Stok Persediaan ATK
+            </a>
             
             <a href="daftar_laporan_umum.php" class="<?= is_active(['daftar_laporan_umum.php', 'laporan_umum.php', 'upload_laporan_umum.php'], $current_page) ?>">
                 Laporan Umum

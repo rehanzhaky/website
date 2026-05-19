@@ -38,9 +38,12 @@ $stmt_check->execute([$nama_seksi, $bulan_sekarang, $tahun_sekarang]);
 $laporan_bulan_ini = $stmt_check->fetch();
 ?>
 
-<div class="dashboard-header">
-    <h2>Daftar E-Performance 📈</h2>
-    <p>Arsip Laporan Kinerja <strong><?= htmlspecialchars($label_seksi) ?></strong></p>
+<div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h2>Daftar E-Performance 📈</h2>
+        <p>Arsip Laporan Kinerja <strong><?= htmlspecialchars($label_seksi) ?></strong></p>
+    </div>
+    <a href="daftar_eperformance.php" style="color: var(--text-primary); text-decoration: none; opacity: 0.8; border: 1px solid var(--border-color); padding: 10px 18px; border-radius: 30px; font-size: 13px; font-weight: bold; background: var(--bg-secondary);">← Kembali</a>
 </div>
 
 <?php if (!$laporan_bulan_ini): ?>

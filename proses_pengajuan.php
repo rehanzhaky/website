@@ -23,12 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         $pdo->beginTransaction();
 
-        // Query Master dibersihkan dari nomor_surat, nama_surat, nama_pengaju, dan keperluan
-        $sql_master = "INSERT INTO pengajuan_inventaris 
-                       (seksi, diketahui_oleh, lampiran, tanggal, status) 
-                       VALUES (?, ?, ?, ?, 'pending')";
+        // Auto-isi field NOT NULL legacy dari sesi & data yg ada
+        $nama_pengaju = $_SESSION['nama_lengkap'] ?? ($_SESSION['username'] ?? 'User');
+        $nama_surat   = "Pengajuan Inventaris - " . $seksi . " - " . date('d/m/Y', strtotime($tanggal));
+
+        $sql_master = "INSERT INTO pengajuan_inventaris
+                       (seksi, nama_surat, nama_pengaju, diketahui_oleh, lampiran, tanggal, status)
+                       VALUES (?, ?, ?, ?, ?, ?, 'pending')";
         $stmt_master = $pdo->prepare($sql_master);
-        $stmt_master->execute([$seksi, $diketahui_oleh, $lampiran_name, $tanggal]);
+        $stmt_master->execute([$seksi, $nama_surat, $nama_pengaju, $diketahui_oleh, $lampiran_name, $tanggal]);
         
         $id_pengajuan = $pdo->lastInsertId();
 
