@@ -22,7 +22,7 @@ $daftar_seksi = ['Sub Bag Tata Usaha', 'Tikkim', 'Intaltuskim', 'Inteldakim', 'L
         ?>
             <a href="e_performance.php?seksi=<?= $slug ?>" style="text-decoration: none;">
                 <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 20px; border-radius: 10px; color: var(--text-primary); font-weight: bold; transition: all 0.3s; display: flex; justify-content: space-between; align-items: center;" onmouseover="this.style.background='var(--blue-lighter)'; this.style.borderColor='var(--blue-primary)';" onmouseout="this.style.background='var(--bg-secondary)'; this.style.borderColor='var(--border-color)';">
-                    <span style="font-size: 15px;">📁 Seksi <?= $seksi ?></span>
+                    <span style="font-size: 15px;">📁 <?= ($seksi === 'Sub Bag Tata Usaha') ? $seksi : 'Seksi ' . $seksi ?></span>
                     <span style="color: var(--text-muted); font-size: 13px; font-weight: normal;">Buka Arsip →</span>
                 </div>
             </a>

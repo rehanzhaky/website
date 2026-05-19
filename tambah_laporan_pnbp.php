@@ -58,9 +58,12 @@ $akun_pnbp = [
 ];
 ?>
 
-<div class="dashboard-header">
-    <h2>Tambah Laporan PNBP 💰</h2>
-    <p style="color: var(--text-secondary);">Input estimasi dan realisasi Penerimaan Negara Bukan Pajak.</p>
+<div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h2>Tambah Laporan PNBP 💰</h2>
+        <p style="color: var(--text-secondary);">Input estimasi dan realisasi Penerimaan Negara Bukan Pajak.</p>
+    </div>
+    <a href="laporan_pnbp.php" style="color: var(--text-primary); text-decoration: none; opacity: 0.8; border: 1px solid var(--border-color); padding: 10px 18px; border-radius: 30px; font-size: 13px; font-weight: bold; background: var(--bg-secondary);">← Kembali</a>
 </div>
 
 <div class="glass panel-utama" style="padding: 30px; border-radius: 12px; border: 1px solid var(--border-color);">

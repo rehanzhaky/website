@@ -87,8 +87,8 @@ foreach ($details as $item) {
     $persen = $item['pagu'] > 0 ? ($item['realisasi'] / $item['pagu']) * 100 : 0;
     
     $sheet->setCellValue('A' . $row, $no++);
-    $sheet->setCellValue('B' . $row, $item['kode_akun']);
-    $sheet->setCellValue('C' . $row, $item['uraian']);
+    $sheet->setCellValue('B' . $row, $item['kode_komponen']);
+    $sheet->setCellValue('C' . $row, $item['judul_komponen']);
     $sheet->setCellValue('D' . $row, $item['pagu']);
     $sheet->setCellValue('E' . $row, $item['realisasi']);
     $sheet->setCellValue('F' . $row, $item['sisa']);
@@ -133,6 +133,7 @@ foreach (range('A', 'G') as $col) {
 
 // Download
 $filename = 'Detail_Realisasi_' . date('Ymd_His') . '.xlsx';
+if (ob_get_length()) { ob_end_clean(); }
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment;filename="' . $filename . '"');
 header('Cache-Control: max-age=0');

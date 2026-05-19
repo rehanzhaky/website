@@ -28,6 +28,9 @@ $list_bulan = [
 $bulan_sekarang = date('n');
 $tahun_sekarang = date('Y');
 
+// Label tampilan: "Sub Bag Tata Usaha" tanpa prefix "Seksi", lainnya pakai prefix
+$label_seksi = ($nama_seksi === 'Sub Bag Tata Usaha') ? $nama_seksi : 'Seksi ' . $nama_seksi;
+
 // Cek apakah bulan ini seksi tersebut sudah upload e-performance
 $check_sql = "SELECT id FROM e_performance WHERE seksi = ? AND bulan = ? AND tahun = ?";
 $stmt_check = $pdo->prepare($check_sql);
@@ -37,7 +40,7 @@ $laporan_bulan_ini = $stmt_check->fetch();
 
 <div class="dashboard-header">
     <h2>Daftar E-Performance 📈</h2>
-    <p>Arsip Laporan Kinerja <strong>Seksi <?= htmlspecialchars($nama_seksi) ?></strong></p>
+    <p>Arsip Laporan Kinerja <strong><?= htmlspecialchars($label_seksi) ?></strong></p>
 </div>
 
 <?php if (!$laporan_bulan_ini): ?>
@@ -45,7 +48,7 @@ $laporan_bulan_ini = $stmt_check->fetch();
         <span style="font-size: 24px;">⚠️</span>
         <div>
             <strong style="color: #ff4c4c; display: block; font-size: 15px; margin-bottom: 3px;">Perhatian!</strong>
-            <span style="font-size: 13px; color: var(--text-secondary);">Seksi <?= htmlspecialchars($nama_seksi) ?> <strong>belum mengunggah</strong> E-Performance untuk periode <?= $list_bulan[$bulan_sekarang] ?> <?= $tahun_sekarang ?>.</span>
+            <span style="font-size: 13px; color: var(--text-secondary);"><?= htmlspecialchars($label_seksi) ?> <strong>belum mengunggah</strong> E-Performance untuk periode <?= $list_bulan[$bulan_sekarang] ?> <?= $tahun_sekarang ?>.</span>
         </div>
     </div>
 <?php else: ?>

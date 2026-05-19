@@ -51,9 +51,12 @@ include 'layouts/header.php';
 include 'layouts/navbar.php';
 ?>
 
-<div class="dashboard-header">
-    <h2>Tambah Realisasi Per Bidang 📊</h2>
-    <p>Input manual target dan capaian anggaran sesuai komponen Seksi.</p>
+<div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h2>Tambah Realisasi Per Bidang 📊</h2>
+        <p>Input manual target dan capaian anggaran sesuai komponen Seksi.</p>
+    </div>
+    <a href="realisasi_anggaran.php" style="color: var(--text-primary); text-decoration: none; opacity: 0.8; border: 1px solid var(--border-color); padding: 10px 18px; border-radius: 30px; font-size: 13px; font-weight: bold; background: var(--bg-secondary);">← Kembali</a>
 </div>
 
 <div class="glass panel-utama" style="padding: 30px;">

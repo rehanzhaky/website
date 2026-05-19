@@ -12,12 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user = $stmt->fetch();
 
     if ($user && (password_verify($password, $user['password']) || $password === $user['password'])) {
-        
+
+        // Bersihkan sisa data session lama dan regenerate ID supaya tiap login dapat session segar
+        $_SESSION = [];
+        session_regenerate_id(true);
+
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['nama_lengkap'] = $user['nama_lengkap'];
         $_SESSION['role'] = $user['role'];
-        $_SESSION['seksi'] = $user['seksi']; 
+        $_SESSION['seksi'] = $user['seksi'];
 
         header("Location: index.php");
         exit;
