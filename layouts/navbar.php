@@ -1,9 +1,8 @@
 <nav class="navbar glass">
     <div class="nav-left" style="display:flex; align-items:center; gap:14px;">
         <button id="toggleBtn" style="background:none; border:none; color:#ffffff; cursor:pointer; font-size: 20px;">☰</button>
-        <div class="nav-logos" style="display:flex; align-items:center; gap:10px;">
-            <img src="assets/image/imigrasi.jpeg" alt="Logo Imigrasi" style="height:42px; width:42px; object-fit:contain; border-radius:8px; background:#ffffff; padding:3px;">
-            <img src="assets/image/imigrasi2.jpeg" alt="Logo Imigrasi 2" style="height:42px; width:42px; object-fit:contain; border-radius:8px; background:#ffffff; padding:3px;">
+        <div class="nav-logos" style="display:flex; align-items:center;">
+            <img src="assets/image/imigrasi2.jpeg" alt="Logo Imigrasi" style="height:46px; width:46px; object-fit:contain;">
         </div>
     </div>
 

@@ -32,7 +32,7 @@ foreach ($daftar_seksi as $seksi):
 <div class="accordion-item">
     <div class="accordion-header" onclick="toggleAccordion(this)">
         <span style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 20px;">🏢</span> <?= ($seksi === 'Sub Bag Tata Usaha') ? htmlspecialchars($seksi) : 'Seksi ' . htmlspecialchars($seksi) ?>
+            <span style="font-size: 20px;">🏢</span> <?= (in_array($seksi, ['Sub Bag Tata Usaha', 'TPI'])) ? htmlspecialchars($seksi) : 'Seksi ' . htmlspecialchars($seksi) ?>
         </span>
         <span class="accordion-icon">▼</span>
     </div>
@@ -42,14 +42,14 @@ foreach ($daftar_seksi as $seksi):
             <a href="daftar_laporan_umum.php?seksi=<?= $slug_seksi ?>" class="action-card view">
                 <div class="card-title">👁️ Lihat Daftar Laporan</div>
                 <div class="card-desc">
-                    Buka dan pantau rekam jejak dokumen laporan yang sudah diarsipkan oleh <?= ($seksi === 'Sub Bag Tata Usaha') ? htmlspecialchars($seksi) : 'Seksi ' . htmlspecialchars($seksi) ?>. Anda dapat mengunduh atau mencetak dokumen dari menu ini.
+                    Buka dan pantau rekam jejak dokumen laporan yang sudah diarsipkan oleh <?= (in_array($seksi, ['Sub Bag Tata Usaha', 'TPI'])) ? htmlspecialchars($seksi) : 'Seksi ' . htmlspecialchars($seksi) ?>. Anda dapat mengunduh atau mencetak dokumen dari menu ini.
                 </div>
             </a>
                 
             <a href="upload_laporan_umum.php?seksi=<?= $slug_seksi ?>" class="action-card upload">
                 <div class="card-title">📤 Upload Laporan Baru</div>
                 <div class="card-desc">
-                    Unggah file dokumen laporan terbaru untuk <?= ($seksi === 'Sub Bag Tata Usaha') ? htmlspecialchars($seksi) : 'Seksi ' . htmlspecialchars($seksi) ?> ke dalam sistem arsip. Pastikan file berformat PDF atau Excel yang telah disetujui.
+                    Unggah file dokumen laporan terbaru untuk <?= (in_array($seksi, ['Sub Bag Tata Usaha', 'TPI'])) ? htmlspecialchars($seksi) : 'Seksi ' . htmlspecialchars($seksi) ?> ke dalam sistem arsip. Pastikan file berformat PDF atau Excel yang telah disetujui.
                 </div>
             </a>
         </div>

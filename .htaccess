@@ -1,0 +1,12 @@
+# Force HTTPS (InfinityFree kasih SSL gratis Let's Encrypt)
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Disable directory listing
+Options -Indexes
+
+# Block akses ke file sensitif
+<FilesMatch "\.(sql|md|json|lock|log)$">
+    Require all denied
+</FilesMatch>

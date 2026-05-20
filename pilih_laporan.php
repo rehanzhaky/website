@@ -28,7 +28,7 @@ include 'layouts/navbar.php';
     <a href="laporan_pnbp.php" style="text-decoration: none; color: inherit;">
         <div class="stat-card glass panel-shortcut" style="height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: #072749; border: 1px solid #0a3a5c;">
             <div style="font-size: 50px; margin-bottom: 15px;">💰</div>
-            <h3 style="color: #ffffff; margin-bottom: 10px;">Realisasi PNBP</h3>
+            <h3 style="color: #ffffff; margin-bottom: 10px;">Realisasi Pendapatan (PNBP)</h3>
             <p style="color: #ffffff; font-size: 14px;">Penerimaan Negara Bukan Pajak Per Akun</p>
         </div>
     </a>

@@ -68,7 +68,7 @@ $laporan_bulan_ini = $stmt_check->fetch();
     <div class="panel-tabel">
         <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
             <h4 style="margin: 0; color: var(--text-primary);">Riwayat Laporan Kinerja</h4>
-            <a href="upload_eperformance.php?seksi=<?= htmlspecialchars($slug_seksi) ?>" class="btn-navy-pill" style="margin: 0; background: rgba(255, 215, 0, 0.2); border-color: #ffd700; color: #ffd700; padding: 6px 15px; font-size: 12px;">
+            <a href="upload_eperformance.php?seksi=<?= htmlspecialchars($slug_seksi) ?>" class="btn-navy-pill" style="margin: 0; background: #072749; border-color: #072749; color: #ffffff; padding: 6px 15px; font-size: 12px;">
                 + Upload Baru
             </a>
         </div>
